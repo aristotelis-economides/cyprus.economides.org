@@ -257,6 +257,46 @@
             font-style: italic;
         }
 
+        /* ── Pick your Cyprus (audience index) ── */
+        .audiences {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            column-gap: 1.4rem;
+            row-gap: 0.45rem;
+            align-items: baseline;
+            margin: 0 0 3rem;
+            padding: 1.4rem 0;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .aud-key {
+            font-family: var(--font-sans);
+            font-size: 0.62rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--color-caption);
+            text-align: right;
+        }
+
+        .aud-links {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: var(--color-divider);
+        }
+
+        .aud-links a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .aud-links a:hover {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+        }
+
         /* ── Section images ── */
         .section-image {
             margin: 0 0 1.5rem 0;
@@ -391,9 +431,13 @@
             <li><a href="#mines">Abandoned mines</a></li>
             <li><a href="#bridges">Bridges &amp; churches</a></li>
             <li><a href="#nicosia">The crossroads</a></li>
+            <li><a href="#north">The other side</a></li>
+            <li><a href="#animals">The animals</a></li>
             <li><a href="#diving">Diving the Zenobia</a></li>
             <li><a href="#beaches">The beaches</a></li>
             <li><a href="#food">The food</a></li>
+            <li><a href="#wine">The wine</a></li>
+            <li><a href="#stay">Slowing down</a></li>
         </ol>
     </nav>
 
@@ -411,9 +455,13 @@
                 <li><a href="#mines">Abandoned mines</a></li>
                 <li><a href="#bridges">Bridges &amp; churches</a></li>
                 <li><a href="#nicosia">The crossroads</a></li>
+                <li><a href="#north">The other side</a></li>
+                <li><a href="#animals">The animals</a></li>
                 <li><a href="#diving">Diving the Zenobia</a></li>
                 <li><a href="#beaches">The beaches</a></li>
                 <li><a href="#food">The food</a></li>
+                <li><a href="#wine">The wine</a></li>
+                <li><a href="#stay">Slowing down</a></li>
             </ol>
         </nav>
 
@@ -422,7 +470,39 @@
 
             <p class="intro">Cyprus is hard to fit neatly into a postcard. It is one of the oldest continuously
                 inhabited places on Earth, the mythological birthplace of Aphrodite, and a meeting point of three
-                continents.</p>
+                continents. What follows is the pitch, and the places we would actually send you.</p>
+
+            <nav class="audiences" aria-label="Pick your Cyprus">
+                <span class="aud-key">Ruins</span>
+                <span class="aud-links"><a href="#history">9,000 years</a> &middot;
+                    <a href="#iliad">the Iliad</a> &middot; <a href="#north">the other side</a></span>
+
+                <span class="aud-key">Rocks</span>
+                <span class="aud-links"><a href="#geology">the ocean floor</a> &middot;
+                    <a href="#mines">the mines</a></span>
+
+                <span class="aud-key">Division</span>
+                <span class="aud-links"><a href="#nicosia">the crossroads</a> &middot;
+                    <a href="#north">the other side</a></span>
+
+                <span class="aud-key">Trails</span>
+                <span class="aud-links"><a href="#nature">Akamas</a> &middot;
+                    <a href="#geology">Troodos</a></span>
+
+                <span class="aud-key">Animals</span>
+                <span class="aud-links"><a href="#animals">vultures, mouflon, flamingos</a></span>
+
+                <span class="aud-key">The sea</span>
+                <span class="aud-links"><a href="#diving">diving</a> &middot;
+                    <a href="#beaches">beaches</a></span>
+
+                <span class="aud-key">Food</span>
+                <span class="aud-links"><a href="#food">the food</a> &middot;
+                    <a href="#wine">the wine</a></span>
+
+                <span class="aud-key">Pampering</span>
+                <span class="aud-links"><a href="#stay">slowing down</a></span>
+            </nav>
 
             <!-- Section 1: History -->
             <section id="history">
@@ -437,6 +517,18 @@
                     founded around 7,000 BC. To put that in perspective: these circular stone houses were already
                     ancient ruins by the time anyone thought to build Stonehenge or the Pyramids. Reconstructed
                     dwellings let you step inside and see how people actually lived nine millennia ago.</p>
+                <p>Where to point the car: <strong>Kourion</strong>, west of Limassol, is the south&rsquo;s best
+                    site. A Greco-Roman theatre hangs on a sea cliff, the mosaics are still in the floors they were
+                    laid in, and the Earthquake House preserves the morning in AD 365 when one of the strongest
+                    earthquakes in Mediterranean history flattened the city mid-breakfast. Go late in the afternoon,
+                    when the light turns and the coaches leave. <strong>Amathus</strong>, on the other side of
+                    Limassol, is the opposite experience: the ruins of an entire ancient kingdom, usually empty.
+                    Its four-ton stone jar sits in the Louvre; the site itself you may have to yourself.</p>
+                <p>In Nicosia, the <strong>Cyprus Museum</strong> packs nine millennia into a building from 1908,
+                    including the two thousand terracotta figures found at Agia Irini standing in a circle, exactly
+                    as they were left. The collection moves to a new building, probably in 2027, so see the old one
+                    while it exists. The <strong>Leventis Museum</strong> nearby is free and tells the story of the
+                    city itself; do it before you walk the Green Line.</p>
             </section>
 
             <!-- Section 2: Iliad -->
@@ -463,6 +555,8 @@
                     island's elite were buried from the 4th century BC in chambers designed to look like actual houses,
                     with columns and frescoed interiors. You can climb down into them. The Roman villa mosaics at Kato
                     Paphos depict mythological scenes in remarkable detail.</p>
+                <p>One honest note: Petra tou Romiou is a fine rock with a great story, but it is a stop, not a
+                    destination. Pull over, take the photo, keep driving.</p>
             </section>
 
             <!-- Section 3: Nature -->
@@ -485,6 +579,13 @@
                     millions of years by the Avgas River. The walls rise up to 30 meters and narrow to just 2 or 3
                     meters at the tightest point, with a massive boulder suspended between the cliffs above you.</p>
                 <p>And the Blue Lagoon at Akamas is exactly as beautiful as every photo you will find on Google.</p>
+                <p>If you walk one trail in Cyprus, walk the <strong>Adonis and Aphrodite loop</strong> from the
+                    Baths of Aphrodite: nine and a half kilometers climbing to a ridge above the Blue Lagoon coast.
+                    Do Adonis first, so the descent hands you the sea the whole way down. Start early; there is no
+                    shade and no reliable water. <strong>Lara Bay</strong>, on the peninsula&rsquo;s west side, is
+                    the turtle beach: loggerheads and greens nest in June and July, the hatchlings are gone by the
+                    end of September, and the road is unpaved on purpose. Bring everything, leave nothing, and keep
+                    lights off after dark in season.</p>
             </section>
 
             <!-- Section 4: Geology -->
@@ -498,8 +599,8 @@
                 </figure>
                 <p>Aristotelis became obsessed with rocks after a geology course.
                 </p>
-                <p>The Troodos mountain range in the center of the island is a beautiful scenery. Few people know that
-                    it is a piece of the
+                <p>The Troodos range in the center of the island looks like ordinary mountain scenery. It is not.
+                    It is a piece of the
                     ocean floor. Geologists call it an ophiolite: a fragment of oceanic crust and upper mantle that
                     formed 92 million years ago at the bottom of the ancient Tethys Ocean, then was pushed upward by the
                     collision of the African and Eurasian plates until it became the spine of Cyprus.</p>
@@ -510,8 +611,13 @@
                     rehabilitated asbestos mine, is one of the best small geology museums anywhere.
                 </p>
                 <p>The region is also home to one of the largest concentrations of Byzantine churches and monasteries
-                    outside of Greece, and produces Commandaria, a rich-tasting red wine widely regarded as the oldest
-                    continuously produced wine in the Mediterranean.</p>
+                    outside of Greece, and to the wine villages (those get their own section below).</p>
+                <p>Two walks put the geology under your feet. The <strong>Artemis trail</strong> circles the summit
+                    cone of Olympus at 1,850 meters, nearly flat, with the whole island below; bring a layer even in
+                    October. Better still is <strong>Teisia tis Madaris</strong>: a three-and-a-half kilometer
+                    geo-trail around the dyke walls of the Madari ridge with more views per kilometer than hikes
+                    ten times its length, and a fire lookout at the top if you extend it. On autumn mornings you
+                    are often above the clouds.</p>
             </section>
 
             <!-- Section 5: Mines -->
@@ -589,8 +695,71 @@
                     checkpoint on Ledra Street, show your passport twice within 15 meters, and cross from the Republic
                     of Cyprus into Northern Cyprus. On one side, signs are in Greek. On the other, Turkish. Between
                     them, a narrow strip of crumbling buildings, barbed wire, and UN observation posts.</p>
-                <p>Nicosia is also full of cafes, street art, and the kind of layered character that only comes
-                    from absorbing dozens of civilizations.</p>
+                <p>The walk that makes it concrete: start at the Leventis Museum for the story, follow the
+                    dead-end streets west along the barricades, and cross at Ledra Street (passport, a few
+                    minutes). On the other side, the <strong>B&uuml;y&uuml;k Han</strong> is a restored Ottoman
+                    caravanserai full of workshops and coffee, and the <strong>Selimiye Mosque</strong> is the
+                    oldest great Gothic building on the island, wearing minarets. Come back past the Ledra Palace
+                    crossing and have coffee at the <strong>Home for Cooperation</strong>, a caf&eacute; that
+                    operates physically inside the buffer zone. Do not photograph the checkpoints or anyone in
+                    uniform.</p>
+                <p>The old town also feeds you properly. Our own row: <strong>&Mu;&pi;&eacute;&mu;&pi;&alpha;</strong>
+                    for modern Cypriot cooking, <strong>Topika</strong> for meze, <strong>Rokoko</strong> and
+                    <strong>&gamma;&rho;&alpha;&nu;&aacute;&zeta;&iota;</strong> for the bar end of the evening.
+                    The <strong>OXI market</strong> sets up on the Venetian walls on Wednesday and Saturday
+                    mornings; go before ten. <strong>Loukoumades Kyrillis</strong> has been frying the same thing
+                    since 1965 and needs no menu. And the <strong>Hamam Omerye</strong> has been a bathhouse, on
+                    and off, since the 14th century: book a treatment, and if the call to prayer from the mosque
+                    next door reaches you under the dome, that is the moment you will remember.</p>
+            </section>
+
+            <!-- Section 8: The north -->
+            <section id="north">
+                <h2>The other side</h2>
+                <p>You can cross. Take your passport, walk through Ledra Street, or drive through Agios Dometios
+                    for the Kyrenia side and Deryneia for Famagusta. Buy the mandatory insurance at the vehicle
+                    crossing and check whether your rental contract allows it; if it does not, park at Deryneia
+                    and take a taxi across. The one rule that matters: arrive on the island through the south.
+                    Landing at Ercan counts as illegal entry into the Republic and can cause you real problems at
+                    the crossings.</p>
+                <p><strong>Famagusta</strong> is the most layered single town on the island: Venetian walls that
+                    survived one of history&rsquo;s great sieges, and a French Gothic cathedral, where Lusignan
+                    kings were crowned Kings of Jerusalem, that has been a mosque since 1571. Next to it lies
+                    <strong>Varosha</strong>, the resort suburb sealed since 1974 and partly reopened as a fenced
+                    corridor. It is the most photographed ghost town in the Mediterranean, and it is also tens of
+                    thousands of people&rsquo;s confiscated homes; some of the displaced visit, some refuse to.
+                    Go quietly, off season, on foot, after the living old town, and the contrast will tell you
+                    more about this island than any museum.</p>
+                <p><strong>Ancient Salamis</strong>, just north, is where the gymnasium colonnade stands against
+                    the sea: unsigned, overgrown, and the most evocative ruin in Cyprus precisely because nobody
+                    is managing your experience there. <strong>St Hilarion</strong>, above Kyrenia, is the best
+                    view on the island from a Crusader castle; the climb is real, and the opening hours obey the
+                    army, not the website. Pair it with <strong>Bellapais Abbey</strong>, where Lawrence Durrell
+                    wrote, and the 2,300-year-old shipwreck in <strong>Kyrenia castle</strong>.</p>
+            </section>
+
+            <!-- Section 9: Animals -->
+            <section id="animals">
+                <h2>The animals</h2>
+                <p>Cyprus&rsquo;s wildlife is a story of comebacks and near misses. The griffon vulture fell to a
+                    few dozen birds here; a rescue project has been flying in Spanish vultures for years, and the
+                    colony at <strong>Kensington Cliffs</strong> near Episkopi is now the one place on the island
+                    to watch them. Go mid-morning, when the thermals build. It is free, and there will be nobody
+                    there.</p>
+                <p>The <strong>mouflon</strong>, the wild sheep on the coins and the airline tails, roams the
+                    Paphos Forest in the thousands and is almost never seen. The enclosure at Stavros tis Psokas
+                    is the near-guaranteed option, but it closed as a precaution in March 2026; check it has
+                    reopened before committing to the long forest drive. The <strong>flamingos</strong> arrive on
+                    the Larnaca and Akrotiri salt lakes in November and leave by March, ten thousand strong in a
+                    good winter. In summer the lakes are a blinding salt crust, striking in its own way.</p>
+                <p>The strangest story: the Akamas caves hold Europe&rsquo;s only fruit bat. David Attenborough
+                    filmed the colonies, and his notes later guided the researchers who mapped the roosts. For
+                    much of the twentieth century the government classified the bats as pests and fumigated their
+                    caves; the colonies that survive are recovering, which is why nobody publishes where they
+                    are.</p>
+                <p>If you are a birder, the <strong>Akrotiri peninsula</strong> is the island&rsquo;s richest
+                    site, and early October brings the raptor migration, with red-footed falcons over the Mandria
+                    fields. BirdLife Cyprus publishes weekly sightings; trust those over promises.</p>
             </section>
 
             <!-- Section 8: Diving -->
@@ -609,6 +778,9 @@
                     chained inside the cargo decks, the massive propellers, the bridge, even the cafeteria with its
                     coffee machine still attached to the bar. Marine life has turned the wreck into a thriving reef:
                     barracuda, grouper, loggerhead turtles, and lionfish are all regulars.</p>
+                <p>Not a diver? Sea kayaking out of Cape Greco runs until the end of October: three hours along
+                    the cliffs to the sea caves, with swimming stops in water that holds 24 degrees deep into
+                    autumn.</p>
             </section>
 
             <!-- Section 9: Beaches -->
@@ -634,10 +806,58 @@
                         alt="A traditional Cypriot meze spread with many small dishes" loading="lazy">
                     <figcaption>Meze: 15 to 25 small dishes, one after another</figcaption>
                 </figure>
-                <p>We will let you discover this one for yourselves. But if you leave Cyprus without having had a proper
-                    meze (think 15 to 25 small dishes served one after another), fresh halloumi that was made that
-                    morning, slow-cooked kleftiko lamb, and loukoumades drizzled with honey, Aristotelis will take it
-                    personally.</p>
+                <p>We will let you discover most of this one for yourselves. But if you leave Cyprus without having
+                    had a proper meze (think 15 to 25 small dishes served one after another), fresh halloumi that was
+                    made that morning, slow-cooked kleftiko lamb, and loukoumades drizzled with honey, Aristotelis
+                    will take it personally.</p>
+                <p>Where we actually eat: <strong>Hercules</strong> in Zygi for fish (order the calamari), with
+                    <strong>Xefoto</strong>, whose own boats catch what it serves, as the second opinion in the
+                    same village. <strong>To souvlaki tou Soukri</strong> in Paralimni, the souvlaki worth a
+                    detour. <strong>Adamos</strong> in Lefkara, which is the answer locals give when you ask in
+                    the village. In the Troodos, <strong>Katoi</strong> in Omodos does kleftiko from a proper clay
+                    oven and justifies braving the island&rsquo;s most coached village; in Kakopetria,
+                    <strong>To Anoi</strong> is the local answer, while the famous Mill serves real trout at
+                    famous-Mill prices.</p>
+                <p>And the single most real food experience on the island is lunch at <strong>Sofia and
+                    Andreas&rsquo; house</strong> in Letymbou: halloumi made in a vat in front of you, bread from
+                    the stone oven, then lunch at their family table. Book ahead, come hungry, cancel your dinner
+                    plans.</p>
+            </section>
+
+            <!-- Section: Wine -->
+            <section id="wine">
+                <h2>The wine</h2>
+                <p>Cyprus has been making wine for about as long as anyone; Commandaria, the amber dessert wine of
+                    the Krasochoria foothills, is plausibly the oldest wine still made under its own name, and the
+                    Knights Hospitaller ran it as an export business from Kolossi castle seven centuries ago. (The
+                    castle itself is a 25-minute stop on the way to Kourion; go for the story, not the tower.)</p>
+                <p>The wine villages reward a full day. <strong>Zambartas</strong> in Agios Amvrosios gives the
+                    best tasting on the island and is busy reviving the indigenous grapes: Xynisteri,
+                    Maratheftiko, Yiannoudi. <strong>Vlassides</strong> in Kilani makes the reference Shiraz in a
+                    building worth the trip by itself, and Kilani is the village to eat in (not Omodos).
+                    <strong>Kyperounda</strong> grows Xynisteri at 1,400 meters, about as high as European
+                    vineyards go, and pairs naturally with the Madari ridge walk above it. <strong>Tsiakkas</strong>
+                    in Pelendri bridges the dry wines and Commandaria from a tasting terrace over the valley. For
+                    Commandaria itself, skip the supermarket bottles and visit <strong>Revecca</strong> in Agios
+                    Mamas, a tiny organic family producer that pours it in the old family house.</p>
+            </section>
+
+            <!-- Section: Slowing down -->
+            <section id="stay">
+                <h2>Slowing down</h2>
+                <p>Cyprus does luxury best when it is woven into a village. <strong>Casale Panayiotis</strong> in
+                    Kalopanayiotis is the proof: a hundred years of stone houses restored across a Marathasa
+                    valley village, a spa whose treatments people rank among the best of their lives, and a
+                    working monastery across the river. The lanes are steep; pack accordingly.
+                    <strong>Apokryfo</strong> in Lofou does the same trick at boutique scale in an unspoilt wine
+                    village, fifteen minutes from Vlassides and Zambartas.</p>
+                <p>Of the big resorts, <strong>Anassa</strong> on the edge of the Akamas is the one whose service
+                    earns the price; eat half your dinners at the Latchi fish quay five minutes away and you have
+                    fixed its one weakness. <strong>Amara</strong> in Limassol is the modern option that guests
+                    rate above its flashier neighbours, and its restaurants, Matsuhisa and Locatelli, are
+                    destination meals on their own. We would skip the Parklane, and the once-charming Library
+                    Hotel in Kalavasos has faded. In Nicosia, the <strong>Hamam Omerye</strong> (see the
+                    crossroads, above) is pampering at the price of a dinner.</p>
             </section>
 
         </article>
