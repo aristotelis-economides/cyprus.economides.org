@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyprus</title>
-    <meta name="description" content="Elevator pitch for Cyprus, by Aristotelis Economides.">
+    <meta name="description" content="What to do in Cyprus: a local's recommendations, by Aristotelis Economides.">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@400;500&display=swap"
         rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" defer></script>
     <script defer src="https://umami.aristot.io/script.js"
         data-website-id="2a0b2e81-1c91-4a69-8707-da056fa1ec43"></script>
     <style>
@@ -28,7 +30,7 @@
             --color-text: #2c2417;
             --color-text-secondary: #6b5e4f;
             --color-bg: #faf8f4;
-            --color-bg-toc: #f4f1eb;
+            --color-bg-soft: #f4f1eb;
             --color-accent: #1a7a6d;
             --color-accent-light: #e8f3f1;
             --color-border: #e0dbd3;
@@ -40,22 +42,57 @@
 
         html {
             font-size: 18px;
-            scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            html {
+                scroll-behavior: smooth;
+            }
         }
 
         body {
             font-family: var(--font-serif);
             color: var(--color-text);
             background-color: var(--color-bg);
-            line-height: 1.75;
-            padding: 0;
+            line-height: 1.7;
         }
 
-        /* ── Header / Hero ── */
+        p {
+            text-wrap: pretty;
+        }
+
+        ::selection {
+            background: var(--color-accent-light);
+            color: var(--color-text);
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.15s ease;
+        }
+
+        a:hover {
+            border-bottom-color: var(--color-accent);
+        }
+
+        /* ── Progress ── */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--color-accent);
+            z-index: 100;
+            width: 0%;
+        }
+
+        /* ── Hero ── */
         .hero {
-            padding: 6rem 2rem 4rem;
+            padding: 6rem 2rem 3.5rem;
             text-align: center;
             max-width: 700px;
             margin: 0 auto;
@@ -64,10 +101,10 @@
         .hero h1 {
             font-family: var(--font-serif);
             font-weight: 300;
-            font-size: 3.5rem;
+            font-size: clamp(2.6rem, 8vw, 3.5rem);
             letter-spacing: 0.08em;
             color: var(--color-text);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .hero .subtitle {
@@ -85,7 +122,7 @@
             width: 40px;
             height: 1px;
             background: var(--color-divider);
-            margin: 3rem auto 0;
+            margin: 2.75rem auto 0;
         }
 
         /* ── Layout ── */
@@ -96,7 +133,7 @@
             padding: 0 2rem;
         }
 
-        /* ── Table of Contents (sidebar) ── */
+        /* ── Contents (sidebar) ── */
         .toc-sidebar {
             display: none;
         }
@@ -107,8 +144,8 @@
                 position: sticky;
                 top: 2rem;
                 align-self: flex-start;
-                width: 240px;
-                min-width: 240px;
+                width: 230px;
+                min-width: 230px;
                 margin-right: 3rem;
                 padding: 1.5rem 0;
                 height: fit-content;
@@ -124,11 +161,11 @@
                 text-transform: uppercase;
                 color: var(--color-text-secondary);
                 margin-bottom: 1rem;
+                padding-left: 0.75rem;
             }
 
             .toc-sidebar ol {
                 list-style: none;
-                padding: 0;
             }
 
             .toc-sidebar li {
@@ -139,10 +176,10 @@
                 font-family: var(--font-sans);
                 font-size: 0.72rem;
                 color: var(--color-text-secondary);
-                text-decoration: none;
                 display: block;
                 padding: 0.3rem 0.75rem;
                 border-left: 2px solid transparent;
+                border-bottom: 0;
                 transition: color 0.2s, border-color 0.2s;
                 line-height: 1.5;
             }
@@ -157,13 +194,13 @@
             }
         }
 
-        /* ── Mobile TOC ── */
+        /* ── Mobile contents ── */
         .toc-mobile {
             display: block;
             max-width: 640px;
             margin: 0 auto 3rem;
             padding: 1.25rem 1.5rem;
-            background: var(--color-bg-toc);
+            background: var(--color-bg-soft);
             border-radius: 4px;
         }
 
@@ -185,7 +222,6 @@
 
         .toc-mobile ol {
             list-style: none;
-            padding: 0;
             columns: 2;
             column-gap: 1.5rem;
         }
@@ -205,7 +241,7 @@
             font-family: var(--font-sans);
             font-size: 0.72rem;
             color: var(--color-text-secondary);
-            text-decoration: none;
+            border-bottom: 0;
             line-height: 1.65;
         }
 
@@ -213,64 +249,56 @@
             color: var(--color-accent);
         }
 
-        /* ── Article content ── */
+        /* ── Article ── */
         .article {
             flex: 1;
             max-width: 640px;
             margin: 0 auto;
-            padding-bottom: 8rem;
+            padding-bottom: 6rem;
         }
 
         .article .intro {
-            font-size: 1.15rem;
+            font-size: 1.12rem;
             font-weight: 300;
-            line-height: 1.85;
-            color: var(--color-text);
-            margin-bottom: 3rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
         }
 
         .article section {
-            margin-bottom: 3.5rem;
+            margin-bottom: 4rem;
         }
 
         .article h2 {
             font-family: var(--font-serif);
             font-weight: 400;
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             color: var(--color-text);
-            margin-bottom: 1.25rem;
             line-height: 1.35;
             letter-spacing: 0.01em;
+            margin-bottom: 0.4rem;
         }
 
-        .article p {
-            margin-bottom: 1.25rem;
-            font-weight: 400;
-            font-size: 1rem;
-        }
-
-        .article p:last-child {
-            margin-bottom: 0;
-        }
-
-        .article em {
+        /* One italic line of context under each group title. */
+        .group-note {
             font-style: italic;
+            color: var(--color-text-secondary);
+            font-size: 0.98rem;
+            margin-bottom: 1.1rem;
         }
 
-        /* ── Pick your Cyprus (audience index) ── */
-        .audiences {
+        /* ── Before you go ── */
+        .before {
             display: grid;
             grid-template-columns: max-content 1fr;
-            column-gap: 1.4rem;
-            row-gap: 0.45rem;
-            align-items: baseline;
-            margin: 0 0 3rem;
+            column-gap: 1.5rem;
+            row-gap: 0.7rem;
+            margin: 0 0 3.5rem;
             padding: 1.4rem 0;
             border-top: 1px solid var(--color-border);
             border-bottom: 1px solid var(--color-border);
         }
 
-        .aud-key {
+        .before dt {
             font-family: var(--font-sans);
             font-size: 0.62rem;
             font-weight: 500;
@@ -278,28 +306,72 @@
             text-transform: uppercase;
             color: var(--color-caption);
             text-align: right;
+            padding-top: 0.3rem;
         }
 
-        .aud-links {
-            font-family: var(--font-sans);
-            font-size: 0.78rem;
-            color: var(--color-divider);
+        .before dd {
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
-        .aud-links a {
-            color: var(--color-text-secondary);
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
+        /* ── The lists ── */
+        .recs {
+            list-style: none;
+            border-top: 1px solid var(--color-border);
         }
 
-        .aud-links a:hover {
-            color: var(--color-accent);
+        .recs li {
+            padding: 0.8rem 0.1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .r-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .r-name {
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        /* Names link to the map quietly. */
+        .r-name a {
+            color: var(--color-text);
+            border-bottom: 1px solid var(--color-divider);
+        }
+
+        .r-name a:hover {
             border-bottom-color: var(--color-accent);
         }
 
-        /* ── Section images ── */
+        .r-tag {
+            font-family: var(--font-sans);
+            font-size: 0.58rem;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--color-caption);
+            white-space: nowrap;
+        }
+
+        .r-tag.north {
+            color: var(--color-accent);
+        }
+
+        .r-note {
+            display: block;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        /* ── Section images (used sparingly) ── */
         .section-image {
-            margin: 0 0 1.5rem 0;
+            margin: 0 0 1.25rem 0;
             overflow: hidden;
             border-radius: 3px;
         }
@@ -319,7 +391,12 @@
             aspect-ratio: 16 / 9;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 0.4s ease;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .section-image img {
+                transition: opacity 0.4s ease;
+            }
         }
 
         .section-image img.loaded {
@@ -340,6 +417,91 @@
             }
         }
 
+        /* ── The map ── */
+        .map-canvas {
+            width: 100%;
+            height: 480px;
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            background: var(--color-bg-soft);
+            margin-top: 1.25rem;
+        }
+
+        @media (max-width: 680px) {
+            .map-canvas {
+                height: 380px;
+            }
+        }
+
+        .map-canvas .mapboxgl-canvas {
+            filter: sepia(0.15) saturate(0.85);
+        }
+
+        .map-marker {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            border: 2px solid var(--color-bg);
+            box-shadow: 0 0 0 1px var(--color-accent);
+            cursor: pointer;
+            outline: 2px solid transparent;
+        }
+
+        .map-marker:hover,
+        .map-marker:focus-visible {
+            background: var(--color-text);
+            box-shadow: 0 0 0 1px var(--color-text);
+        }
+
+        .map-marker:focus-visible {
+            outline-color: var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .mapboxgl-popup-content {
+            font-family: var(--font-serif);
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            box-shadow: 0 2px 12px rgba(44, 36, 23, 0.12);
+            padding: 0.9rem 1rem;
+            max-width: 260px;
+        }
+
+        .mapboxgl-popup-tip {
+            border-top-color: var(--color-border) !important;
+        }
+
+        .map-popup h3 {
+            font-family: var(--font-serif);
+            font-weight: 500;
+            font-size: 1.02rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .map-popup p {
+            font-size: 0.85rem;
+            line-height: 1.55;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .map-popup a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            letter-spacing: 0.04em;
+        }
+
+        .map-note {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 0.92rem;
+            color: var(--color-text-secondary);
+            text-align: center;
+            margin-top: 0.9rem;
+        }
+
         /* ── Footer ── */
         .footer {
             text-align: center;
@@ -356,33 +518,6 @@
             line-height: 1.7;
         }
 
-        .footer a {
-            color: var(--color-accent);
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* ── Scroll progress bar ── */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 2px;
-            background: var(--color-accent);
-            z-index: 100;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-
-        /* ── Selection ── */
-        ::selection {
-            background: var(--color-accent-light);
-            color: var(--color-text);
-        }
-
         /* ── Responsive ── */
         @media (max-width: 640px) {
             html {
@@ -390,11 +525,7 @@
             }
 
             .hero {
-                padding: 4rem 1.5rem 3rem;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
+                padding: 4rem 1.5rem 2.5rem;
             }
 
             .page-wrapper {
@@ -405,6 +536,22 @@
                 margin-left: 0;
                 margin-right: 0;
             }
+
+            .r-head {
+                flex-wrap: wrap;
+                gap: 0.2rem 1rem;
+            }
+        }
+
+        @media print {
+
+            .toc-sidebar,
+            .toc-mobile,
+            .progress-bar,
+            .map-canvas,
+            .map-note {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -413,498 +560,704 @@
 
     <div class="progress-bar" id="progressBar"></div>
 
-    <!-- Hero -->
     <header class="hero">
         <h1>Cyprus</h1>
-        <p class="subtitle">An elevator pitch, by a local.</p>
         <div class="hero-divider"></div>
     </header>
 
-    <!-- Mobile TOC -->
-    <nav class="toc-mobile" aria-label="Table of contents">
+    <nav class="toc-mobile" aria-label="Contents">
         <div class="toc-label">Contents</div>
         <ol>
-            <li><a href="#history">9,000 years of history</a></li>
-            <li><a href="#iliad">Heroes of the Iliad</a></li>
-            <li><a href="#nature">Akamas &amp; nature</a></li>
-            <li><a href="#geology">Troodos geology</a></li>
-            <li><a href="#mines">Abandoned mines</a></li>
-            <li><a href="#bridges">Bridges &amp; churches</a></li>
-            <li><a href="#nicosia">The crossroads</a></li>
-            <li><a href="#north">The other side</a></li>
-            <li><a href="#animals">The animals</a></li>
-            <li><a href="#diving">Diving the Zenobia</a></li>
-            <li><a href="#beaches">The beaches</a></li>
-            <li><a href="#food">The food</a></li>
-            <li><a href="#wine">The wine</a></li>
-            <li><a href="#stay">Slowing down</a></li>
+            <li><a href="#ruins">Ruins &amp; history</a></li>
+            <li><a href="#divide">The divided island</a></li>
+            <li><a href="#rocks">Rocks &amp; mines</a></li>
+            <li><a href="#trails">Trails</a></li>
+            <li><a href="#wild">The wild</a></li>
+            <li><a href="#sea">The sea</a></li>
+            <li><a href="#food">Food</a></li>
+            <li><a href="#wine">Wine</a></li>
+            <li><a href="#slow">Slowing down</a></li>
+            <li><a href="#map">The map</a></li>
         </ol>
     </nav>
 
-    <!-- Page layout -->
     <div class="page-wrapper">
 
-        <!-- Sidebar TOC (desktop only) -->
-        <nav class="toc-sidebar" aria-label="Table of contents">
+        <nav class="toc-sidebar" aria-label="Contents">
             <div class="toc-label">Contents</div>
             <ol>
-                <li><a href="#history">9,000 years of history</a></li>
-                <li><a href="#iliad">Heroes of the Iliad</a></li>
-                <li><a href="#nature">Akamas &amp; nature</a></li>
-                <li><a href="#geology">Troodos geology</a></li>
-                <li><a href="#mines">Abandoned mines</a></li>
-                <li><a href="#bridges">Bridges &amp; churches</a></li>
-                <li><a href="#nicosia">The crossroads</a></li>
-                <li><a href="#north">The other side</a></li>
-                <li><a href="#animals">The animals</a></li>
-                <li><a href="#diving">Diving the Zenobia</a></li>
-                <li><a href="#beaches">The beaches</a></li>
-                <li><a href="#food">The food</a></li>
-                <li><a href="#wine">The wine</a></li>
-                <li><a href="#stay">Slowing down</a></li>
+                <li><a href="#ruins">Ruins &amp; history</a></li>
+                <li><a href="#divide">The divided island</a></li>
+                <li><a href="#rocks">Rocks &amp; mines</a></li>
+                <li><a href="#trails">Trails</a></li>
+                <li><a href="#wild">The wild</a></li>
+                <li><a href="#sea">The sea</a></li>
+                <li><a href="#food">Food</a></li>
+                <li><a href="#wine">Wine</a></li>
+                <li><a href="#slow">Slowing down</a></li>
+                <li><a href="#map">The map</a></li>
             </ol>
         </nav>
 
-        <!-- Article -->
-        <article class="article">
+        <main class="article">
 
-            <p class="intro">Cyprus is hard to fit neatly into a postcard. It is one of the oldest continuously
-                inhabited places on Earth, the mythological birthplace of Aphrodite, and a meeting point of three
-                continents. What follows is the pitch, and the places we would actually send you.</p>
+            <p class="intro">Cyprus is one of the oldest continuously inhabited places on Earth, a piece of
+                ocean floor pushed two kilometers into the air, and the last divided capital in the world, all
+                on an island you can cross in two hours. Everything below is pinned on
+                <a href="#map">the map</a> at the end.</p>
 
-            <nav class="audiences" aria-label="Pick your Cyprus">
-                <span class="aud-key">Ruins</span>
-                <span class="aud-links"><a href="#history">9,000 years</a> &middot;
-                    <a href="#iliad">the Iliad</a> &middot; <a href="#north">the other side</a></span>
+            <dl class="before">
+                <dt>Drive</dt>
+                <dd>On the left, UK-style. Rent a car; taxis and intercity buses exist, but the island opens
+                    up by road.</dd>
 
-                <span class="aud-key">Rocks</span>
-                <span class="aud-links"><a href="#geology">the ocean floor</a> &middot;
-                    <a href="#mines">the mines</a></span>
+                <dt>When</dt>
+                <dd>April to June and September to November. August is an oven. Flamingos arrive in November;
+                    turtles nest June to September.</dd>
 
-                <span class="aud-key">Division</span>
-                <span class="aud-links"><a href="#nicosia">the crossroads</a> &middot;
-                    <a href="#north">the other side</a></span>
+                <dt>The divide</dt>
+                <dd>Split since 1974. Crossing for a day is routine with a passport. Arrive on the island
+                    through the south; landing at Ercan airport counts as illegal entry into the Republic.
+                    Entries marked <span class="r-tag north" style="font-size:0.58rem">north</span> are beyond
+                    the line; I have not been myself, so those come from research rather than memory.</dd>
+            </dl>
 
-                <span class="aud-key">Trails</span>
-                <span class="aud-links"><a href="#nature">Akamas</a> &middot;
-                    <a href="#geology">Troodos</a></span>
-
-                <span class="aud-key">Animals</span>
-                <span class="aud-links"><a href="#animals">vultures, mouflon, flamingos</a></span>
-
-                <span class="aud-key">The sea</span>
-                <span class="aud-links"><a href="#diving">diving</a> &middot;
-                    <a href="#beaches">beaches</a></span>
-
-                <span class="aud-key">Food</span>
-                <span class="aud-links"><a href="#food">the food</a> &middot;
-                    <a href="#wine">the wine</a></span>
-
-                <span class="aud-key">Pampering</span>
-                <span class="aud-links"><a href="#stay">slowing down</a></span>
-            </nav>
-
-            <!-- Section 1: History -->
-            <section id="history">
-                <h2>9,000 years of history</h2>
-                <figure class="section-image">
-                    <img src="assets/khirokitia.webp"
-                        alt="Reconstructed circular stone dwellings at the Neolithic settlement of Khirokitia, Cyprus"
-                        loading="eager">
-                    <figcaption>Reconstructed dwellings at Khirokitia, founded around 7,000 BC</figcaption>
-                </figure>
-                <p>At Khirokitia, about 40 minutes from Larnaca, you can walk through a Neolithic settlement that was
-                    founded around 7,000 BC. To put that in perspective: these circular stone houses were already
-                    ancient ruins by the time anyone thought to build Stonehenge or the Pyramids. Reconstructed
-                    dwellings let you step inside and see how people actually lived nine millennia ago.</p>
-                <p>Where to point the car: <strong>Kourion</strong>, west of Limassol, is the south&rsquo;s best
-                    site. A Greco-Roman theatre hangs on a sea cliff, the mosaics are still in the floors they were
-                    laid in, and the Earthquake House preserves the morning in AD 365 when one of the strongest
-                    earthquakes in Mediterranean history flattened the city mid-breakfast. Go late in the afternoon,
-                    when the light turns and the coaches leave. <strong>Amathus</strong>, on the other side of
-                    Limassol, is the opposite experience: the ruins of an entire ancient kingdom, usually empty.
-                    Its four-ton stone jar sits in the Louvre; the site itself you may have to yourself.</p>
-                <p>In Nicosia, the <strong>Cyprus Museum</strong> packs nine millennia into a building from 1908,
-                    including the two thousand terracotta figures found at Agia Irini standing in a circle, exactly
-                    as they were left. The collection moves to a new building, probably in 2027, so see the old one
-                    while it exists. The <strong>Leventis Museum</strong> nearby is free and tells the story of the
-                    city itself; do it before you walk the Green Line.</p>
+            <section id="ruins">
+                <h2>Ruins &amp; history</h2>
+                <p class="group-note">Nine thousand years of it. These are the ones worth the drive.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Kourion+Archaeological+Site"
+                                    target="_blank" rel="noopener">Kourion</a></span><span
+                                class="r-tag">Limassol</span></div>
+                        <span class="r-note">A Greco-Roman theatre hanging on a sea cliff, mosaics still in
+                            their floors, and a house flattened mid-breakfast by the great earthquake of AD
+                            365. Go late afternoon; no shade.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Amathus+Ruins"
+                                    target="_blank" rel="noopener">Amathus</a></span><span
+                                class="r-tag">Limassol</span></div>
+                        <span class="r-note">An entire ancient kingdom, usually empty. Its four-ton stone jar
+                            is in the Louvre; the silence stayed here.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Tombs+of+the+Kings+Paphos"
+                                    target="_blank" rel="noopener">Tombs of the Kings &amp; Kato Paphos
+                                    mosaics</a></span><span class="r-tag">Paphos</span></div>
+                        <span class="r-note">Burial chambers carved into rock like underground houses, and
+                            Roman villa floors seventeen centuries old. One morning, together.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Choirokoitia+Neolithic+settlement"
+                                    target="_blank" rel="noopener">Khirokitia</a></span><span
+                                class="r-tag">Larnaca</span></div>
+                        <span class="r-note">Round stone houses from 7,000 BC, already ancient ruins before
+                            Stonehenge was an idea. Step inside the reconstructions.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Cyprus+Museum+Nicosia"
+                                    target="_blank" rel="noopener">Cyprus Museum</a></span><span
+                                class="r-tag">Nicosia</span></div>
+                        <span class="r-note">Nine millennia in one hour, including two thousand terracotta
+                            figures found standing in a circle. Moving to a new building around 2027; see the
+                            1908 one while it exists.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Leventis+Municipal+Museum+Nicosia"
+                                    target="_blank" rel="noopener">Leventis Museum</a></span><span
+                                class="r-tag">Nicosia</span></div>
+                        <span class="r-note">Free, and the best-told story on the island. Do it before you
+                            walk the Green Line.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Petra+tou+Romiou"
+                                    target="_blank" rel="noopener">Petra tou Romiou</a></span><span
+                                class="r-tag">Paphos road</span></div>
+                        <span class="r-note">Aphrodite&rsquo;s birthplace, says the legend. A fine rock and a
+                            great story, but a stop, not a destination: pull over, take the photo, keep
+                            driving.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Salamis+ancient+city+Famagusta"
+                                    target="_blank" rel="noopener">Ancient Salamis</a></span><span
+                                class="r-tag north">North</span></div>
+                        <span class="r-note">The gymnasium colonnade against the sea. Unsigned and overgrown,
+                            and the most evocative ruin on the island precisely because nobody manages your
+                            experience.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=St+Hilarion+Castle"
+                                    target="_blank" rel="noopener">St Hilarion Castle</a></span><span
+                                class="r-tag north">North</span></div>
+                        <span class="r-note">The best view in Cyprus, from a Crusader castle above Kyrenia.
+                            Real climb; hours obey the army, not the website. Pair with Bellapais Abbey and
+                            the 2,300-year-old shipwreck in Kyrenia castle.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Church+of+Saint+Lazarus+Larnaca"
+                                    target="_blank" rel="noopener">Saint Lazarus &amp; Angeloktisti</a></span><span
+                                class="r-tag">Larnaca</span></div>
+                        <span class="r-note">A 9th-century church over the tomb of the biblical Lazarus (the
+                            crypt is the point), and in Kiti a 6th-century mosaic whose only peer is at Mount
+                            Sinai.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Agios+Nikolaos+tis+Stegis+Kakopetria"
+                                    target="_blank" rel="noopener">The painted churches of Troodos</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">Churches disguised as barns, wall-to-wall Byzantine murals
+                            inside; ten are UNESCO listed. Agios Nikolaos tis Stegis is walkable from old
+                            Kakopetria.</span>
+                    </li>
+                </ul>
             </section>
 
-            <!-- Section 2: Iliad -->
-            <section id="iliad">
-                <h2>Where the heroes of the Iliad started over</h2>
-                <figure class="section-image">
-                    <img src="assets/tombs-of-the-kings.webp"
-                        alt="The underground Tombs of the Kings carved into rock in Paphos, Cyprus, with Doric columns surrounding an open atrium"
-                        loading="lazy">
-                    <figcaption>Tombs of the Kings, Paphos, 4th century BC</figcaption>
-                </figure>
-                <p>After the fall of
-                    Troy, the heroes of the Iliad scattered across the Mediterranean, and an unusual number of them
-                    ended up in Cyprus. Teucer, the great archer who fought alongside his half-brother Ajax, was
-                    banished by
-                    his own father for failing to bring Ajax's body home. He sailed to Cyprus and founded the city of
-                    Salamis on the eastern coast, naming it after the island he could never return to. Agapenor, leader
-                    of the Arcadian forces at Troy, was blown off course by a storm and landed on the western shore,
-                    where he founded Paphos and built the sanctuary of Aphrodite.</p>
-                <p>Legend says that Aphrodite herself was born from the sea foam at Petra tou Romiou in Paphos. The
-                    Sanctuary of Aphrodite, built by the Mycenaeans in the 12th century BC, drew pilgrims from across
-                    the ancient world for over a thousand years until a Roman emperor shut it down in 391 AD.</p>
-                <p>At the Tombs of the Kings in Paphos, a vast underground necropolis carved directly into the rock, the
-                    island's elite were buried from the 4th century BC in chambers designed to look like actual houses,
-                    with columns and frescoed interiors. You can climb down into them. The Roman villa mosaics at Kato
-                    Paphos depict mythological scenes in remarkable detail.</p>
-                <p>One honest note: Petra tou Romiou is a fine rock with a great story, but it is a stop, not a
-                    destination. Pull over, take the photo, keep driving.</p>
-            </section>
-
-            <!-- Section 3: Nature -->
-            <section id="nature">
-                <h2>The Akamas Peninsula</h2>
-                <figure class="section-image">
-                    <img src="assets/blue-lagoon-top-view-optimised.webp"
-                        alt="Aerial view of the Blue Lagoon at Akamas Peninsula, Cyprus, with turquoise water and rugged coastline"
-                        loading="lazy">
-                    <figcaption>Blue Lagoon, Akamas Peninsula</figcaption>
-                </figure>
-                <p>The Akamas Peninsula, on the island's northwest tip, is one of the last unspoiled natural
-                    regions in the Mediterranean. There are no paved roads through its interior. Over 600 plant
-                    species thrive here, including dozens that are endemic to Cyprus and grow nowhere else on Earth
-                    (among them the Akamas tulip, whose entire known world population consists of roughly 200 plants).
-                    It is home to sea turtles, griffon vultures, fruit bats in limestone caves (famously filmed
-                    by David Attenborough), and a landscape that shifts from sandy coves to pine forests to
-                    mountain scrub within a few kilometers.</p>
-                <p>The Avakas Gorge, on the southern edge of the peninsula, is a canyon carved through limestone over
-                    millions of years by the Avgas River. The walls rise up to 30 meters and narrow to just 2 or 3
-                    meters at the tightest point, with a massive boulder suspended between the cliffs above you.</p>
-                <p>And the Blue Lagoon at Akamas is exactly as beautiful as every photo you will find on Google.</p>
-                <p>If you walk one trail in Cyprus, walk the <strong>Adonis and Aphrodite loop</strong> from the
-                    Baths of Aphrodite: nine and a half kilometers climbing to a ridge above the Blue Lagoon coast.
-                    Do Adonis first, so the descent hands you the sea the whole way down. Start early; there is no
-                    shade and no reliable water. <strong>Lara Bay</strong>, on the peninsula&rsquo;s west side, is
-                    the turtle beach: loggerheads and greens nest in June and July, the hatchlings are gone by the
-                    end of September, and the road is unpaved on purpose. Bring everything, leave nothing, and keep
-                    lights off after dark in season.</p>
-            </section>
-
-            <!-- Section 4: Geology -->
-            <section id="geology">
-                <h2>A piece of the ocean floor, 2,000 meters in the air</h2>
-                <figure class="section-image">
-                    <img src="assets/troodos-mountains.webp"
-                        alt="The Troodos mountain range in Cyprus, with pine-forested slopes and rocky peaks"
-                        loading="lazy">
-                    <figcaption>Troodos Mountains, a 92-million-year-old fragment of ocean floor</figcaption>
-                </figure>
-                <p>Aristotelis became obsessed with rocks after a geology course.
-                </p>
-                <p>The Troodos range in the center of the island looks like ordinary mountain scenery. It is not.
-                    It is a piece of the
-                    ocean floor. Geologists call it an ophiolite: a fragment of oceanic crust and upper mantle that
-                    formed 92 million years ago at the bottom of the ancient Tethys Ocean, then was pushed upward by the
-                    collision of the African and Eurasian plates until it became the spine of Cyprus.</p>
-                <p>It is considered the most complete and best-preserved ophiolite sequence in the world. You can
-                    literally walk from rocks that were once the Earth's upper mantle to what was once the ocean floor,
-                    all on hiking trails. The Troodos Geopark covers over 1,100 square kilometers with 38 geosites and
-                    84 trails. The visitor center, housed in a restored early 20th-century school at the site of a
-                    rehabilitated asbestos mine, is one of the best small geology museums anywhere.
-                </p>
-                <p>The region is also home to one of the largest concentrations of Byzantine churches and monasteries
-                    outside of Greece, and to the wine villages (those get their own section below).</p>
-                <p>Two walks put the geology under your feet. The <strong>Artemis trail</strong> circles the summit
-                    cone of Olympus at 1,850 meters, nearly flat, with the whole island below; bring a layer even in
-                    October. Better still is <strong>Teisia tis Madaris</strong>: a three-and-a-half kilometer
-                    geo-trail around the dyke walls of the Madari ridge with more views per kilometer than hikes
-                    ten times its length, and a fire lookout at the top if you extend it. On autumn mornings you
-                    are often above the clouds.</p>
-            </section>
-
-            <!-- Section 5: Mines -->
-            <section id="mines">
-                <h2>Abandoned mines and blood-red lakes</h2>
-                <figure class="section-image">
-                    <img src="assets/red-lake-mitsero.webp"
-                        alt="The vivid red lake at the abandoned Mitsero copper mine in Cyprus" loading="lazy">
-                    <figcaption>Red Lake at the abandoned Mitsero copper mine</figcaption>
-                </figure>
-                <p>The word "copper" comes from Cyprus. The Latin <em>cuprum</em> derives from <em>aes Cyprium</em>,
-                    "metal of Cyprus," and the island supplied nearly all of the Roman Empire's copper at the height of
-                    its power. Mining eventually collapsed, lay dormant for centuries, was revived by the British, and
-                    then collapsed again.</p>
-                <p>What remains are surreal hiking landscapes. Near the village
-                    of Mitsero, about 30 minutes from Nicosia, abandoned open-pit copper mines have filled with
-                    groundwater that turned deep, vivid red from the concentration of heavy metals left behind. The
-                    locals call it the Red Lake. Its color shifts with the seasons and even the time of day. You cannot
-                    swim in it (the water is toxic). Nearby, the Kokkinogia
-                    mine still has its rusting machinery and a horizontal tunnel you can peer into. Further along the
-                    same route, the mines around Mathiatis and the village of Sha offer more colored lakes and gossan rock formations in yellow, brown, and orange. All part of the Troodos Geopark.</p>
-            </section>
-
-            <!-- Section 6: Bridges & Churches -->
-            <section id="bridges">
-                <h2>Stone bridges, ancient churches, and things you find by accident</h2>
-                <figure class="section-image">
-                    <img src="assets/tzelefos-bridge.webp"
-                        alt="The Tzelefos Bridge, a 16th-century Venetian stone bridge in the Paphos Forest, Cyprus"
-                        loading="lazy">
-                    <figcaption>Tzelefos Bridge, 16th century, Paphos Forest</figcaption>
-                </figure>
-                <p>Deep in the Paphos Forest, the Tzelefos Bridge is a single-arched Venetian stone bridge from the 16th
-                    century, the largest on the island, once part of the camel road network built to carry copper from
-                    the Troodos mines to the sea. Its humpback design let camels cross over it when the rivers ran high
-                    and walk under it through the dry riverbed in summer. There are 27 Venetian bridges designated as
-                    ancient monuments across Cyprus, and you can hike a trail connecting three of them through the
-                    forest.</p>
-                <p>In Larnaca, the Church of Saint Lazarus was built in the 9th century directly over the tomb of the
-                    biblical Lazarus, who (according to Orthodox tradition) fled to Cyprus after being raised from the
-                    dead, became the city's first bishop, and lived another 30 years. You can walk down into the crypt
-                    and see the empty sarcophagus. Near Kiti, the Angeloktisti Church (its name means "built by angels")
-                    preserves a 6th-century mosaic of the Virgin and Child that rivals anything in Ravenna. Mosaics from
-                    this period exist in only two places on Earth: here and Mount Sinai.</p>
-                <p>But beyond the headline sites, small Byzantine and medieval chapels are scattered across
-                    the island, tucked into valleys,
-                    perched on hillsides, hiding inside villages. Ten of the painted churches in Troodos are
-                    collectively UNESCO World Heritage listed, with elaborate murals inside modest, barn-roofed
-                    exteriors that were built to be inconspicuous. There are many more that aren't in any guidebook. You
-                    just find them.</p>
-            </section>
-
-            <!-- Section 7: Nicosia -->
-            <section id="nicosia">
-                <h2>The crossroads of everything</h2>
+            <section id="divide">
+                <h2>The divided island</h2>
                 <figure class="section-image">
                     <img src="assets/nicosia-green-line.webp"
                         alt="The UN buffer zone (Green Line) in Nicosia, Cyprus, with barbed wire and abandoned buildings"
                         loading="lazy">
                     <figcaption>The UN buffer zone, Nicosia</figcaption>
                 </figure>
-                <p>Cyprus sits closer to Beirut than to Athens, closer to Damascus than to Rome. For most of recorded
-                    history, this positioning made it one of the most strategically contested pieces of land on Earth,
-                    and everyone who ever built an empire in this part of the world eventually wanted it.</p>
-                <p>The list of rulers reads like a graduate seminar syllabus: Mycenaean Greeks, Assyrians, Egyptians,
-                    Persians, Alexander the Great, the Ptolemaic dynasty, the Roman Empire, the Byzantines, Richard the
-                    Lionheart (who conquered it on his way to the Third Crusade and then sold it), the Lusignan dynasty,
-                    the Venetians, the Ottoman Empire, and the British. Each of them left something behind, and you can
-                    see most of it.</p>
-                <p>Nicosia, the capital, has been continuously inhabited for over 5,500 years and is the last divided
-                    capital in the world. In 1963, a British general drew a line across the city with a green pencil to
-                    stop intercommunal fighting. In 1974, following a Greek-backed coup and a Turkish military response,
-                    that line became a UN-controlled buffer zone stretching 180 kilometers across the entire island. The
-                    old city, enclosed within 16th-century Venetian walls, is still split. You can walk through a
-                    checkpoint on Ledra Street, show your passport twice within 15 meters, and cross from the Republic
-                    of Cyprus into Northern Cyprus. On one side, signs are in Greek. On the other, Turkish. Between
-                    them, a narrow strip of crumbling buildings, barbed wire, and UN observation posts.</p>
-                <p>The walk that makes it concrete: start at the Leventis Museum for the story, follow the
-                    dead-end streets west along the barricades, and cross at Ledra Street (passport, a few
-                    minutes). On the other side, the <strong>B&uuml;y&uuml;k Han</strong> is a restored Ottoman
-                    caravanserai full of workshops and coffee, and the <strong>Selimiye Mosque</strong> is the
-                    oldest great Gothic building on the island, wearing minarets. Come back past the Ledra Palace
-                    crossing and have coffee at the <strong>Home for Cooperation</strong>, a caf&eacute; that
-                    operates physically inside the buffer zone. Do not photograph the checkpoints or anyone in
-                    uniform.</p>
-                <p>The old town also feeds you properly. Our own row: <strong>&Mu;&pi;&eacute;&mu;&pi;&alpha;</strong>
-                    for modern Cypriot cooking, <strong>Topika</strong> for meze, <strong>Rokoko</strong> and
-                    <strong>&gamma;&rho;&alpha;&nu;&aacute;&zeta;&iota;</strong> for the bar end of the evening.
-                    The <strong>OXI market</strong> sets up on the Venetian walls on Wednesday and Saturday
-                    mornings; go before ten. <strong>Loukoumades Kyrillis</strong> has been frying the same thing
-                    since 1965 and needs no menu. And the <strong>Hamam Omerye</strong> has been a bathhouse, on
-                    and off, since the 14th century: book a treatment, and if the call to prayer from the mosque
-                    next door reaches you under the dome, that is the moment you will remember.</p>
+                <p class="group-note">In 1963 a British general drew a line across Nicosia with a green
+                    pencil. It is still there. Don&rsquo;t photograph checkpoints or anyone in uniform.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Ledra+Street+Crossing+Point"
+                                    target="_blank" rel="noopener">The Green Line walk</a></span><span
+                                class="r-tag">Nicosia</span></div>
+                        <span class="r-note">Follow the dead-end streets along the barricades, cross at Ledra
+                            Street (passport, minutes), and come back past the Home for Cooperation, a
+                            caf&eacute; physically inside the buffer zone.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Buyuk+Han+Nicosia"
+                                    target="_blank" rel="noopener">B&uuml;y&uuml;k Han &amp; Selimiye
+                                    Mosque</a></span><span class="r-tag north">North Nicosia</span></div>
+                        <span class="r-note">A restored Ottoman caravanserai full of workshops and coffee, and
+                            the island&rsquo;s oldest great Gothic building, wearing minarets. Both a short
+                            walk from the Ledra crossing.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Famagusta+old+town"
+                                    target="_blank" rel="noopener">Famagusta walled city</a></span><span
+                                class="r-tag north">North</span></div>
+                        <span class="r-note">Venetian walls that survived one of history&rsquo;s great
+                            sieges, and a French Gothic cathedral, coronation church of the Kings of
+                            Jerusalem, a mosque since 1571. Morning, before Varosha.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Varosha+Famagusta"
+                                    target="_blank" rel="noopener">Varosha</a></span><span
+                                class="r-tag north">North</span></div>
+                        <span class="r-note">The resort suburb sealed since 1974, partly walkable since 2020.
+                            It is also tens of thousands of people&rsquo;s confiscated homes; go quietly, on
+                            foot, off season. The contrast with the living old town next door says more than
+                            any museum.</span>
+                    </li>
+                </ul>
             </section>
 
-            <!-- Section 8: The north -->
-            <section id="north">
-                <h2>The other side</h2>
-                <p>You can cross. Take your passport, walk through Ledra Street, or drive through Agios Dometios
-                    for the Kyrenia side and Deryneia for Famagusta. Buy the mandatory insurance at the vehicle
-                    crossing and check whether your rental contract allows it; if it does not, park at Deryneia
-                    and take a taxi across. The one rule that matters: arrive on the island through the south.
-                    Landing at Ercan counts as illegal entry into the Republic and can cause you real problems at
-                    the crossings.</p>
-                <p><strong>Famagusta</strong> is the most layered single town on the island: Venetian walls that
-                    survived one of history&rsquo;s great sieges, and a French Gothic cathedral, where Lusignan
-                    kings were crowned Kings of Jerusalem, that has been a mosque since 1571. Next to it lies
-                    <strong>Varosha</strong>, the resort suburb sealed since 1974 and partly reopened as a fenced
-                    corridor. It is the most photographed ghost town in the Mediterranean, and it is also tens of
-                    thousands of people&rsquo;s confiscated homes; some of the displaced visit, some refuse to.
-                    Go quietly, off season, on foot, after the living old town, and the contrast will tell you
-                    more about this island than any museum.</p>
-                <p><strong>Ancient Salamis</strong>, just north, is where the gymnasium colonnade stands against
-                    the sea: unsigned, overgrown, and the most evocative ruin in Cyprus precisely because nobody
-                    is managing your experience there. <strong>St Hilarion</strong>, above Kyrenia, is the best
-                    view on the island from a Crusader castle; the climb is real, and the opening hours obey the
-                    army, not the website. Pair it with <strong>Bellapais Abbey</strong>, where Lawrence Durrell
-                    wrote, and the 2,300-year-old shipwreck in <strong>Kyrenia castle</strong>.</p>
+            <section id="rocks">
+                <h2>Rocks &amp; mines</h2>
+                <figure class="section-image">
+                    <img src="assets/red-lake-mitsero.webp"
+                        alt="The vivid red lake at the abandoned Mitsero copper mine in Cyprus" loading="lazy">
+                    <figcaption>Red Lake at the abandoned Mitsero copper mine</figcaption>
+                </figure>
+                <p class="group-note">The Troodos is a slab of 92-million-year-old ocean floor, and the word
+                    &ldquo;copper&rdquo; comes from this island. Aristotelis will not apologise for this
+                    section.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Troodos+Geopark+Visitor+Centre"
+                                    target="_blank" rel="noopener">Troodos Geopark visitor centre</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">In an old school inside a rehabilitated asbestos mine.
+                            Forty-five minutes that upgrade every mountain drive after it. See it
+                            first.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Red+Lake+Mitsero"
+                                    target="_blank" rel="noopener">Red Lake, Mitsero</a></span><span
+                                class="r-tag">Nicosia</span></div>
+                        <span class="r-note">An abandoned copper pit filled with blood-red water, thirty
+                            minutes from the capital. Toxic; look, don&rsquo;t touch. The pits at Mathiatis
+                            nearby glow yellow and orange.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Tzelefos+Bridge"
+                                    target="_blank" rel="noopener">Tzelefos bridge</a></span><span
+                                class="r-tag">Paphos Forest</span></div>
+                        <span class="r-note">A 16th-century humpback on the Venetian camel road that carried
+                            the copper to the sea. A forest detour that feels found, not visited.</span>
+                    </li>
+                </ul>
             </section>
 
-            <!-- Section 9: Animals -->
-            <section id="animals">
-                <h2>The animals</h2>
-                <p>Cyprus&rsquo;s wildlife is a story of comebacks and near misses. The griffon vulture fell to a
-                    few dozen birds here; a rescue project has been flying in Spanish vultures for years, and the
-                    colony at <strong>Kensington Cliffs</strong> near Episkopi is now the one place on the island
-                    to watch them. Go mid-morning, when the thermals build. It is free, and there will be nobody
-                    there.</p>
-                <p>The <strong>mouflon</strong>, the wild sheep on the coins and the airline tails, roams the
-                    Paphos Forest in the thousands and is almost never seen. The enclosure at Stavros tis Psokas
-                    is the near-guaranteed option, but it closed as a precaution in March 2026; check it has
-                    reopened before committing to the long forest drive. The <strong>flamingos</strong> arrive on
-                    the Larnaca and Akrotiri salt lakes in November and leave by March, ten thousand strong in a
-                    good winter. In summer the lakes are a blinding salt crust, striking in its own way.</p>
-                <p>The strangest story: the Akamas caves hold Europe&rsquo;s only fruit bat. David Attenborough
-                    filmed the colonies, and his notes later guided the researchers who mapped the roosts. For
-                    much of the twentieth century the government classified the bats as pests and fumigated their
-                    caves; the colonies that survive are recovering, which is why nobody publishes where they
-                    are.</p>
-                <p>If you are a birder, the <strong>Akrotiri peninsula</strong> is the island&rsquo;s richest
-                    site, and early October brings the raptor migration, with red-footed falcons over the Mandria
-                    fields. BirdLife Cyprus publishes weekly sightings; trust those over promises.</p>
+            <section id="trails">
+                <h2>Trails</h2>
+                <p class="group-note">October through May. Early starts, real shoes, carry water.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Baths+of+Aphrodite+Akamas"
+                                    target="_blank" rel="noopener">Adonis &amp; Aphrodite loop</a></span><span
+                                class="r-tag">Akamas</span></div>
+                        <span class="r-note">The definitive Cyprus walk: nine and a half kilometers to a
+                            ridge above the Blue Lagoon coast. Do Adonis first so the descent hands you the
+                            sea the whole way down.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Teisia+tis+Madaris+trail"
+                                    target="_blank" rel="noopener">Teisia tis Madaris</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">Three and a half kilometers around the dyke walls of the Madari
+                            ridge; more views per kilometer than hikes ten times its length. Often above the
+                            clouds on autumn mornings.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Artemis+Trail+Troodos"
+                                    target="_blank" rel="noopener">Artemis trail</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">Circles the summit cone of Olympus at 1,850 meters, nearly flat,
+                            whole island below. Bring a layer even in October.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Avakas+Gorge"
+                                    target="_blank" rel="noopener">Avakas Gorge</a></span><span
+                                class="r-tag">Akamas</span></div>
+                        <span class="r-note">A limestone slot canyon three meters wide under thirty-meter
+                            walls, boulder wedged overhead.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Caledonia+Falls+Platres"
+                                    target="_blank" rel="noopener">Caledonia Falls</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">Lush, shaded, genuinely lovely, and the busiest trail on the
+                            island. Weekday morning; trout at Psilo Dendro after.</span>
+                    </li>
+                </ul>
             </section>
 
-            <!-- Section 8: Diving -->
-            <section id="diving">
-                <h2>Diving a top-ten wreck</h2>
+            <section id="wild">
+                <h2>The wild</h2>
+                <p class="group-note">Comebacks and near misses. Seasons matter here.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Lara+Bay+turtle+beach"
+                                    target="_blank" rel="noopener">Lara Bay</a></span><span
+                                class="r-tag">Akamas</span></div>
+                        <span class="r-note">The turtle beach: nesting June and July, hatchlings through
+                            September. Unpaved road on purpose. Bring everything, leave nothing, no lights
+                            after dark in season.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Kensington+Cliffs+Episkopi"
+                                    target="_blank" rel="noopener">Kensington Cliffs</a></span><span
+                                class="r-tag">Limassol</span></div>
+                        <span class="r-note">The griffon vulture colony, rebuilt with birds flown in from
+                            Spain. Go mid-morning when the thermals build. Free, and nobody is there.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Larnaca+Salt+Lake"
+                                    target="_blank" rel="noopener">The salt lakes</a></span><span
+                                class="r-tag">Larnaca &middot; Akrotiri</span></div>
+                        <span class="r-note">Flamingos by the thousand, November to March. In summer, a
+                            blinding salt mirror. The Akrotiri peninsula is the island&rsquo;s richest birding
+                            year-round.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Stavros+tis+Psokas"
+                                    target="_blank" rel="noopener">Stavros tis Psokas</a></span><span
+                                class="r-tag">Paphos Forest</span></div>
+                        <span class="r-note">The near-guaranteed mouflon sighting, deep in the forest near
+                            Cedar Valley. Closed as a precaution in March 2026; check it has reopened before
+                            the long drive.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="sea">
+                <h2>The sea</h2>
                 <figure class="section-image">
                     <img src="assets/musan-diving-underwater-museum.webp"
                         alt="Diver exploring the MUSAN underwater sculpture museum in Ayia Napa, Cyprus" loading="lazy">
                     <figcaption>The MUSAN underwater sculpture museum, Ayia Napa</figcaption>
                 </figure>
-                <p>If you are a diver (or have ever been curious about it), Cyprus has one of the longest diving seasons
-                    in the Mediterranean, stretching from March through November.</p>
-                <p>The Zenobia is a 172-meter Swedish ferry that sank off Larnaca in 1980 on its maiden voyage, taking
-                    over 100 trucks with it. It now rests on its side at 42 meters depth. You
-                    can still see the trucks
-                    chained inside the cargo decks, the massive propellers, the bridge, even the cafeteria with its
-                    coffee machine still attached to the bar. Marine life has turned the wreck into a thriving reef:
-                    barracuda, grouper, loggerhead turtles, and lionfish are all regulars.</p>
-                <p>Not a diver? Sea kayaking out of Cape Greco runs until the end of October: three hours along
-                    the cliffs to the sea caves, with swimming stops in water that holds 24 degrees deep into
-                    autumn.</p>
+                <p class="group-note">One of the longest dive seasons in the Mediterranean, March to November.
+                    The water holds 24 degrees deep into autumn.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Zenobia+wreck+Larnaca"
+                                    target="_blank" rel="noopener">The Zenobia</a></span><span
+                                class="r-tag">Larnaca</span></div>
+                        <span class="r-note">A 172-meter ferry that sank in 1980 with a hundred trucks
+                            aboard; a world top-ten wreck dive, minutes offshore. The cafeteria&rsquo;s coffee
+                            machine is still attached to the bar.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=MUSAN+Ayia+Napa"
+                                    target="_blank" rel="noopener">MUSAN</a></span><span
+                                class="r-tag">Ayia Napa</span></div>
+                        <span class="r-note">An underwater sculpture museum you snorkel or dive through.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Cape+Greco+sea+caves"
+                                    target="_blank" rel="noopener">Cape Greco by kayak</a></span><span
+                                class="r-tag">Ayia Napa</span></div>
+                        <span class="r-note">Three hours along the cliffs to the sea caves, swimming stops
+                            included. Runs until the end of October; book the morning glass.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Nissi+Beach"
+                                    target="_blank" rel="noopener">Nissi &middot; Fig Tree Bay &middot;
+                                    Konnos</a></span><span class="r-tag">Ayia Napa &middot; Protaras</span></div>
+                        <span class="r-note">The postcard beaches, honestly earned. Konnos is the quieter of
+                            the three.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Blue+Lagoon+Akamas"
+                                    target="_blank" rel="noopener">Blue Lagoon</a></span><span
+                                class="r-tag">Akamas</span></div>
+                        <span class="r-note">Exactly as beautiful as every photo you will find on
+                            Google.</span>
+                    </li>
+                </ul>
             </section>
 
-            <!-- Section 9: Beaches -->
-            <section id="beaches">
-                <h2>The beaches</h2>
-                <figure class="section-image">
-                    <img src="assets/nissi-beach-optimised.webp"
-                        alt="Nissi Beach in Ayia Napa, Cyprus, with white sand and turquoise shallow water"
-                        loading="lazy">
-                    <figcaption>Nissi Beach, Ayia Napa</figcaption>
-                </figure>
-                <p>Nissi Beach in Ayia Napa is the one you have probably seen in photos: white sand, shallow turquoise
-                    water, and a small natural bridge connecting to a tiny island you can wade to. Fig Tree Bay in
-                    Protaras regularly appears on lists of Europe's best beaches. And Lara Bay, tucked inside the Akamas
-                    Peninsula, is a protected turtle nesting beach that feels untouched.</p>
-            </section>
-
-            <!-- Section 10: Food -->
             <section id="food">
-                <h2>The food</h2>
+                <h2>Food</h2>
                 <figure class="section-image">
                     <img src="assets/cyprus-meze-optimised.webp"
                         alt="A traditional Cypriot meze spread with many small dishes" loading="lazy">
                     <figcaption>Meze: 15 to 25 small dishes, one after another</figcaption>
                 </figure>
-                <p>We will let you discover most of this one for yourselves. But if you leave Cyprus without having
-                    had a proper meze (think 15 to 25 small dishes served one after another), fresh halloumi that was
-                    made that morning, slow-cooked kleftiko lamb, and loukoumades drizzled with honey, Aristotelis
-                    will take it personally.</p>
-                <p>Where we actually eat: <strong>Hercules</strong> in Zygi for fish (order the calamari), with
-                    <strong>Xefoto</strong>, whose own boats catch what it serves, as the second opinion in the
-                    same village. <strong>To souvlaki tou Soukri</strong> in Paralimni, the souvlaki worth a
-                    detour. <strong>Adamos</strong> in Lefkara, which is the answer locals give when you ask in
-                    the village. In the Troodos, <strong>Katoi</strong> in Omodos does kleftiko from a proper clay
-                    oven and justifies braving the island&rsquo;s most coached village; in Kakopetria,
-                    <strong>To Anoi</strong> is the local answer, while the famous Mill serves real trout at
-                    famous-Mill prices.</p>
-                <p>And the single most real food experience on the island is lunch at <strong>Sofia and
-                    Andreas&rsquo; house</strong> in Letymbou: halloumi made in a vat in front of you, bread from
-                    the stone oven, then lunch at their family table. Book ahead, come hungry, cancel your dinner
-                    plans.</p>
+                <p class="group-note">Leave without a proper meze, fresh halloumi, kleftiko, and loukoumades,
+                    and Aristotelis takes it personally.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Sofia+traditional+house+Letymbou"
+                                    target="_blank" rel="noopener">Sofia &amp; Andreas&rsquo; house,
+                                    Letymbou</a></span><span class="r-tag">Paphos</span></div>
+                        <span class="r-note">Halloumi made in a vat in front of you, bread from the stone
+                            oven, lunch at their family table. The realest food experience on the island. Book
+                            ahead; cancel your dinner plans.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Hercules+Fish+Tavern+Zygi"
+                                    target="_blank" rel="noopener">Hercules &amp; Xefoto, Zygi</a></span><span
+                                class="r-tag">Zygi</span></div>
+                        <span class="r-note">Fish in the village it landed in. Order the calamari at
+                            Hercules; Xefoto&rsquo;s own boats catch what it serves.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Bemba+restaurant+Nicosia"
+                                    target="_blank" rel="noopener">The Nicosia old-town row</a></span><span
+                                class="r-tag">Nicosia</span></div>
+                        <span class="r-note">&Mu;&pi;&eacute;&mu;&pi;&alpha; for modern Cypriot cooking,
+                            Topika for meze, Rokoko and &gamma;&rho;&alpha;&nu;&aacute;&zeta;&iota; for the
+                            bar end of the evening. Loukoumades Kyrillis since 1965; the OXI market on the
+                            walls, Wednesday and Saturday before ten.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=To+souvlaki+tou+Soukri+Paralimni"
+                                    target="_blank" rel="noopener">To souvlaki tou Soukri</a></span><span
+                                class="r-tag">Paralimni</span></div>
+                        <span class="r-note">The souvlaki worth a detour. There is a second one in
+                            Protaras.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Adamos+Tavern+Lefkara"
+                                    target="_blank" rel="noopener">Adamos, Lefkara</a></span><span
+                                class="r-tag">Larnaca hills</span></div>
+                        <span class="r-note">The answer locals give when you ask in the village.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Katoi+Omodos"
+                                    target="_blank" rel="noopener">Katoi, Omodos &middot; To Anoi,
+                                    Kakopetria</a></span><span class="r-tag">Troodos</span></div>
+                        <span class="r-note">Clay-oven kleftiko that justifies the island&rsquo;s most coached
+                            village, and the local answer in Kakopetria. The famous Mill serves real trout at
+                            famous-Mill prices.</span>
+                    </li>
+                </ul>
             </section>
 
-            <!-- Section: Wine -->
             <section id="wine">
-                <h2>The wine</h2>
-                <p>Cyprus has been making wine for about as long as anyone; Commandaria, the amber dessert wine of
-                    the Krasochoria foothills, is plausibly the oldest wine still made under its own name, and the
-                    Knights Hospitaller ran it as an export business from Kolossi castle seven centuries ago. (The
-                    castle itself is a 25-minute stop on the way to Kourion; go for the story, not the tower.)</p>
-                <p>The wine villages reward a full day. <strong>Zambartas</strong> in Agios Amvrosios gives the
-                    best tasting on the island and is busy reviving the indigenous grapes: Xynisteri,
-                    Maratheftiko, Yiannoudi. <strong>Vlassides</strong> in Kilani makes the reference Shiraz in a
-                    building worth the trip by itself, and Kilani is the village to eat in (not Omodos).
-                    <strong>Kyperounda</strong> grows Xynisteri at 1,400 meters, about as high as European
-                    vineyards go, and pairs naturally with the Madari ridge walk above it. <strong>Tsiakkas</strong>
-                    in Pelendri bridges the dry wines and Commandaria from a tasting terrace over the valley. For
-                    Commandaria itself, skip the supermarket bottles and visit <strong>Revecca</strong> in Agios
-                    Mamas, a tiny organic family producer that pours it in the old family house.</p>
+                <h2>Wine</h2>
+                <p class="group-note">Commandaria is plausibly the oldest wine still made under its own name;
+                    the Knights ran it from Kolossi castle. The villages making it are an hour from the
+                    coast.</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Zambartas+Winery"
+                                    target="_blank" rel="noopener">Zambartas</a></span><span
+                                class="r-tag">Krasochoria</span></div>
+                        <span class="r-note">The best tasting on the island, busy reviving the indigenous
+                            grapes: Xynisteri, Maratheftiko, Yiannoudi.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Vlassides+Winery+Kilani"
+                                    target="_blank" rel="noopener">Vlassides, Kilani</a></span><span
+                                class="r-tag">Krasochoria</span></div>
+                        <span class="r-note">The reference Shiraz in a building worth the trip by itself.
+                            Kilani is the village to eat in, not Omodos.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Kyperounda+Winery"
+                                    target="_blank" rel="noopener">Kyperounda</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">Xynisteri grown at 1,400 meters, about as high as European
+                            vineyards go, directly below the Madari ridge walk.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Tsiakkas+Winery+Pelendri"
+                                    target="_blank" rel="noopener">Tsiakkas, Pelendri</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">Bridges the dry wines and Commandaria from a tasting terrace
+                            over the valley.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Revecca+Winery+Agios+Mamas"
+                                    target="_blank" rel="noopener">Revecca, Agios Mamas</a></span><span
+                                class="r-tag">Commandaria</span></div>
+                        <span class="r-note">A tiny organic family producer pouring the real thing in the old
+                            family house. Skip the supermarket bottles.</span>
+                    </li>
+                </ul>
             </section>
 
-            <!-- Section: Slowing down -->
-            <section id="stay">
+            <section id="slow">
                 <h2>Slowing down</h2>
-                <p>Cyprus does luxury best when it is woven into a village. <strong>Casale Panayiotis</strong> in
-                    Kalopanayiotis is the proof: a hundred years of stone houses restored across a Marathasa
-                    valley village, a spa whose treatments people rank among the best of their lives, and a
-                    working monastery across the river. The lanes are steep; pack accordingly.
-                    <strong>Apokryfo</strong> in Lofou does the same trick at boutique scale in an unspoilt wine
-                    village, fifteen minutes from Vlassides and Zambartas.</p>
-                <p>Of the big resorts, <strong>Anassa</strong> on the edge of the Akamas is the one whose service
-                    earns the price; eat half your dinners at the Latchi fish quay five minutes away and you have
-                    fixed its one weakness. <strong>Amara</strong> in Limassol is the modern option that guests
-                    rate above its flashier neighbours, and its restaurants, Matsuhisa and Locatelli, are
-                    destination meals on their own. We would skip the Parklane, and the once-charming Library
-                    Hotel in Kalavasos has faded. In Nicosia, the <strong>Hamam Omerye</strong> (see the
-                    crossroads, above) is pampering at the price of a dinner.</p>
+                <p class="group-note">Cyprus does luxury best when it is woven into a village. (We would skip
+                    the Parklane; the Library Hotel in Kalavasos has faded.)</p>
+                <ul class="recs">
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Casale+Panayiotis+Kalopanayiotis"
+                                    target="_blank" rel="noopener">Casale Panayiotis</a></span><span
+                                class="r-tag">Troodos</span></div>
+                        <span class="r-note">A century of stone houses restored across a living valley
+                            village, with a spa people rank among the best treatments of their lives. Steep
+                            lanes; pack accordingly.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Apokryfo+Lofou"
+                                    target="_blank" rel="noopener">Apokryfo, Lofou</a></span><span
+                                class="r-tag">Krasochoria</span></div>
+                        <span class="r-note">The boutique version, in an unspoilt wine village fifteen
+                            minutes from the wineries.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Anassa+Hotel"
+                                    target="_blank" rel="noopener">Anassa</a></span><span
+                                class="r-tag">Akamas</span></div>
+                        <span class="r-note">The one big resort whose service earns the price. Eat half your
+                            dinners at the Latchi fish quay five minutes away and you have fixed its one
+                            weakness.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Amara+Hotel+Limassol"
+                                    target="_blank" rel="noopener">Amara</a></span><span
+                                class="r-tag">Limassol</span></div>
+                        <span class="r-note">The modern option guests rate above its flashier neighbours;
+                            Matsuhisa and Locatelli are destination meals on their own.</span>
+                    </li>
+                    <li>
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Hamam+Omerye+Nicosia"
+                                    target="_blank" rel="noopener">Hamam Omerye</a></span><span
+                                class="r-tag">Nicosia</span></div>
+                        <span class="r-note">A bathhouse, on and off, since the 14th century. Book a
+                            treatment; if the call to prayer reaches you under the dome, that is the moment
+                            you will remember.</span>
+                    </li>
+                </ul>
             </section>
 
-        </article>
+            <section id="map">
+                <h2>The map</h2>
+                <p class="group-note">Everything above, pinned. Tap a point for the note and directions.</p>
+                <div class="map-canvas" id="mapCanvas"
+                    aria-label="Map of Cyprus with every place recommended on this page"></div>
+                <p class="map-note">Drag to pan, ctrl + scroll to zoom, tap a point.</p>
+            </section>
+
+        </main>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>Written by <a href="https://economides.org">Aristotelis</a></p>
     </footer>
 
     <script>
-        // Scroll progress bar
-        window.addEventListener('scroll', () => {
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const progress = (scrollTop / scrollHeight) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
+        // Scroll progress bar.
+        window.addEventListener('scroll', function () {
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressBar').style.width = (scrollTop / scrollHeight) * 100 + '%';
         });
 
-        // Active TOC link highlighting
-        const sections = document.querySelectorAll('section[id]');
-        const tocLinks = document.querySelectorAll('.toc-sidebar a');
-
-        const observerOptions = {
-            rootMargin: '-20% 0px -75% 0px',
-            threshold: 0
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    tocLinks.forEach(link => link.classList.remove('active'));
-                    const activeLink = document.querySelector(`.toc-sidebar a[href="#${entry.target.id}"]`);
-                    if (activeLink) activeLink.classList.add('active');
-                }
+        // Contents scrollspy (sidebar).
+        (function () {
+            if (!('IntersectionObserver' in window)) return;
+            var links = document.querySelectorAll('.toc-sidebar a');
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) return;
+                    links.forEach(function (link) {
+                        link.classList.toggle('active', link.hash === '#' + entry.target.id);
+                    });
+                });
+            }, { rootMargin: '-20% 0px -75% 0px' });
+            document.querySelectorAll('section[id]').forEach(function (section) {
+                observer.observe(section);
             });
-        }, observerOptions);
+        })();
 
-        sections.forEach(section => observer.observe(section));
-
-        // Image fade-in on load
-        document.querySelectorAll('.section-image img').forEach(img => {
+        // Image fade-in.
+        document.querySelectorAll('.section-image img').forEach(function (img) {
             if (img.complete) {
                 img.classList.add('loaded');
             } else {
-                img.addEventListener('load', () => img.classList.add('loaded'));
+                img.addEventListener('load', function () { img.classList.add('loaded'); });
             }
+        });
+
+        // The map: every place on the page, pinned. Data lives in
+        // assets/recommendations.json so adding a place never means touching
+        // this file. Runs on DOMContentLoaded so deferred mapbox-gl has run.
+        document.addEventListener('DOMContentLoaded', function () {
+            var el = document.getElementById('mapCanvas');
+            if (!el || typeof mapboxgl === 'undefined') return;
+
+            // Public token, URL-restricted to the economides.org sites
+            // and localhost in the Mapbox console.
+            mapboxgl.accessToken =
+                'pk.eyJ1IjoiYTE5cyIsImEiOiJjbXFhM3JjbXIwMXF6MnBxenk3OHc1ZHozIn0.ehzFdqTjBpdtveKj9QCbwA';
+
+            var map = new mapboxgl.Map({
+                container: el,
+                style: 'mapbox://styles/mapbox/light-v11',
+                bounds: [[32.10, 34.45], [34.75, 35.80]],
+                fitBoundsOptions: { padding: 28 },
+                cooperativeGestures: true,
+                dragRotate: false,
+                pitchWithRotate: false
+            });
+            map.touchZoomRotate.disableRotation();
+            map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+            map.addControl(new mapboxgl.ScaleControl({ maxWidth: 90 }), 'bottom-left');
+
+            // Quiet base: hide tile labels so the pins are the only voice.
+            map.on('style.load', function () {
+                map.getStyle().layers.forEach(function (layer) {
+                    if (layer.type === 'symbol') {
+                        map.setLayoutProperty(layer.id, 'visibility', 'none');
+                    }
+                });
+            });
+
+            var openPopup = null;
+
+            fetch('assets/recommendations.json')
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    data.recommendations.forEach(function (place) {
+                        if (!place.name || !place.coords) {
+                            console.warn('Skipping recommendation without name/coords', place);
+                            return;
+                        }
+
+                        var node = document.createElement('button');
+                        node.type = 'button';
+                        node.className = 'map-marker';
+                        node.setAttribute('aria-label', place.name);
+
+                        var popupContent = document.createElement('div');
+                        popupContent.className = 'map-popup';
+                        var title = document.createElement('h3');
+                        title.textContent = place.name;
+                        popupContent.appendChild(title);
+                        if (place.note) {
+                            var note = document.createElement('p');
+                            note.textContent = place.note;
+                            popupContent.appendChild(note);
+                        }
+                        var link = document.createElement('a');
+                        link.href = place.maps_url ||
+                            ('https://www.google.com/maps/search/?api=1&query=' +
+                                encodeURIComponent(place.name + ' Cyprus'));
+                        link.target = '_blank';
+                        link.rel = 'noopener';
+                        link.textContent = 'Open in Google Maps →';
+                        popupContent.appendChild(link);
+
+                        var popup = new mapboxgl.Popup({ offset: 14, maxWidth: '280px' })
+                            .setDOMContent(popupContent);
+
+                        new mapboxgl.Marker({ element: node })
+                            .setLngLat(place.coords)
+                            .setPopup(popup)
+                            .addTo(map);
+
+                        popup.on('open', function () {
+                            if (openPopup && openPopup !== popup) openPopup.remove();
+                            openPopup = popup;
+                        });
+                    });
+                })
+                .catch(function (error) {
+                    console.warn('Could not load recommendations:', error);
+                });
         });
     </script>
 </body>
