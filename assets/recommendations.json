@@ -2,6 +2,7 @@
   "_readme": "Every place on the page, pinned. coords are [longitude, latitude], verified June 2026 against Google Maps / OSM. The popup's Google Maps link searches by name unless maps_url is set. Add a place by adding an entry; the page needs no other change.",
   "recommendations": [
     { "name": "Khirokitia", "coords": [33.3434, 34.7964], "note": "A UNESCO-listed Neolithic settlement, around 9,000 years old, with reconstructed stone round houses on site." },
+    { "name": "Church of Saint Lazarus", "coords": [33.6348, 34.9115], "note": "A late-9th-century Byzantine church in central Larnaca, built over what tradition holds is the second tomb of Lazarus." },
     { "name": "Cyprus Museum, Nicosia", "coords": [33.3550, 35.1717], "note": "The island's main archaeological museum, spanning nine millennia of Cypriot history." },
     { "name": "Kourion", "coords": [32.8872, 34.6645], "note": "A Greco-Roman city with a restored theatre set on a cliff above the sea." },
     { "name": "Kato Paphos Archaeological Park", "coords": [32.4054, 34.7570], "note": "A UNESCO site known for its Roman mosaic floors, preserved where they were laid." },
@@ -43,6 +44,7 @@
     { "name": "Hercules Fish Tavern, Zygi", "coords": [33.3410, 34.7295], "note": "A fish tavern in the coastal village of Zygi, known for its calamari." },
     { "name": "To souvlaki tou Soukri, Paralimni", "coords": [33.9823, 35.0444], "note": "A Paralimni grill known for its souvlaki." },
     { "name": "Adamos Tavern, Lefkara", "coords": [33.3070, 34.8650], "note": "A village tavern in Lefkara popular with locals." },
+    { "name": "Lazaris", "coords": [33.6344, 34.9119], "maps_url": "https://www.google.com/maps/search/?api=1&query=Lazaris+BakeryBar+Larnaca", "note": "A bakery-bar in a restored townhouse beside the Church of Saint Lazarus in Larnaca." },
     { "name": "Katoi, Omodos", "coords": [32.8080, 34.8480], "note": "A tavern in Omodos known for clay-oven kleftiko." },
     { "name": "Bemba (Μπέμπα)", "coords": [33.3696, 35.1689], "note": "Modern Cypriot cooking in Nicosia's old town." },
     { "name": "Topika Meze Bar", "coords": [33.3566, 35.1700], "note": "A meze restaurant on Nicosia's old-town food row." },
@@ -50,6 +52,7 @@
     { "name": "Rokoko Kitchen & Bar", "coords": [33.3561, 35.1692], "note": "A bar and kitchen in Nicosia's old town." },
     { "name": "Granazi (γρανάζι)", "coords": [33.3516, 35.1631], "note": "A bar with food in Nicosia." },
     { "name": "OXI Market", "coords": [33.3670, 35.1685], "note": "A farmers' market on Nicosia's Venetian walls, Wednesday and Saturday mornings." },
+    { "name": "Honest Bread", "coords": [33.3681, 35.1423], "maps_url": "https://www.google.com/maps/search/?api=1&query=Honest+Bread+Nicosia", "note": "A small sourdough bakery in Nicosia." },
 
     { "name": "Zambartas Winery", "coords": [32.8242, 34.7767], "note": "A respected family winery working with indigenous Cypriot grapes." },
     { "name": "Vlassides Winery", "coords": [32.8511, 34.8293], "note": "A winery near Kilani known for its Shiraz." },

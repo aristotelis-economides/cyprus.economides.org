@@ -314,6 +314,75 @@
             line-height: 1.6;
         }
 
+        /* ── View toggle: theme vs region grouping ── */
+        /* Sits between the hero and the contents, since it decides what the
+           contents lists. */
+        .view-toggle[hidden] {
+            display: none;
+        }
+
+        .view-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: -1.5rem auto 2.75rem;
+            padding: 0 1.5rem;
+        }
+
+        .view-toggle-label {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+        }
+
+        .view-btn {
+            font-family: var(--font-sans);
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            padding: 0.35rem 0.95rem;
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: 999px;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .view-btn:hover {
+            color: var(--color-text);
+            border-color: var(--color-divider);
+        }
+
+        .view-btn.active {
+            background: var(--color-accent-light);
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        /* The two views swap via a body class; the map section stays in both. */
+        .region-sections,
+        .toc-region {
+            display: none;
+        }
+
+        body.view-region .region-sections {
+            display: block;
+        }
+
+        body.view-region section.by-theme,
+        body.view-region .toc-theme {
+            display: none;
+        }
+
+        body.view-region .toc-region {
+            display: block;
+        }
+
         /* ── The lists ── */
         .recs {
             list-style: none;
@@ -548,6 +617,7 @@
             .toc-sidebar,
             .toc-mobile,
             .progress-bar,
+            .view-toggle,
             .map-canvas,
             .map-note {
                 display: none;
@@ -565,9 +635,17 @@
         <div class="hero-divider"></div>
     </header>
 
+    <!-- hidden until the script that powers it has run; without JS the page
+         is simply the theme view and the control never appears. -->
+    <div class="view-toggle" role="group" aria-label="Group recommendations by" hidden>
+        <span class="view-toggle-label">Group by</span>
+        <button type="button" class="view-btn active" data-view="theme" aria-pressed="true">Theme</button>
+        <button type="button" class="view-btn" data-view="region" aria-pressed="false">Region</button>
+    </div>
+
     <nav class="toc-mobile" aria-label="Contents">
         <div class="toc-label">Contents</div>
-        <ol>
+        <ol class="toc-theme">
             <li><a href="#ruins">Ruins &amp; history</a></li>
             <li><a href="#divide">The divided island</a></li>
             <li><a href="#rocks">Rocks &amp; mines</a></li>
@@ -585,7 +663,7 @@
 
         <nav class="toc-sidebar" aria-label="Contents">
             <div class="toc-label">Contents</div>
-            <ol>
+            <ol class="toc-theme">
                 <li><a href="#ruins">Ruins &amp; history</a></li>
                 <li><a href="#divide">The divided island</a></li>
                 <li><a href="#rocks">Rocks &amp; mines</a></li>
@@ -623,11 +701,15 @@
                     the line; I have not been myself, so those come from research rather than memory.</dd>
             </dl>
 
-            <section id="ruins">
+            <!-- Filled by script: the same places, regrouped by drive-time
+                 proximity. Hidden unless the body carries .view-region. -->
+            <div class="region-sections" id="regionSections"></div>
+
+            <section id="ruins" class="by-theme">
                 <h2>Ruins &amp; history</h2>
                 <p class="group-note">Nine thousand years of it. These are the ones worth the drive.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="limassol">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Kourion+Archaeological+Site"
                                     target="_blank" rel="noopener">Kourion</a></span><span class="r-tag">Limassol</span>
@@ -637,7 +719,7 @@
                             365.</span>
                     </li>
 
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Tombs+of+the+Kings+Paphos"
                                     target="_blank" rel="noopener">Tombs of the Kings &amp; Kato Paphos
@@ -645,7 +727,7 @@
                         <span class="r-note">Rock-cut underground tombs from the Hellenistic period, paired
                             with the Roman villa mosaics of Kato Paphos nearby.</span>
                     </li>
-                    <li>
+                    <li data-region="larnaca">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Choirokoitia+Neolithic+settlement"
                                     target="_blank" rel="noopener">Khirokitia</a></span><span
@@ -653,7 +735,16 @@
                         <span class="r-note">A Neolithic settlement of round stone houses dating to around
                             7,000 BC, with reconstructions you can step inside.</span>
                     </li>
-                    <li>
+                    <li data-region="larnaca">
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Church+of+Saint+Lazarus+Larnaca"
+                                    target="_blank" rel="noopener">Church of Saint Lazarus</a></span><span
+                                class="r-tag">Larnaca</span></div>
+                        <span class="r-note">A late-9th-century Byzantine church in the heart of Larnaca,
+                            built over what tradition holds is the second tomb of Lazarus; a sarcophagus
+                            sits in the crypt beneath the altar.</span>
+                    </li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Cyprus+Museum+Nicosia"
                                     target="_blank" rel="noopener">Cyprus Museum</a></span><span
@@ -663,7 +754,7 @@
                             a new building around 2027.</span>
                     </li>
 
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Petra+tou+Romiou"
                                     target="_blank" rel="noopener">Petra tou Romiou</a></span><span class="r-tag">Paphos
@@ -671,7 +762,7 @@
                         <span class="r-note">A coastal rock formation named in legend as the birthplace of
                             Aphrodite. A roadside stop rather than a destination.</span>
                     </li>
-                    <li>
+                    <li data-region="north">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Salamis+ancient+city+Famagusta"
                                     target="_blank" rel="noopener">Ancient Salamis</a></span><span
@@ -679,7 +770,7 @@
                         <span class="r-note">An ancient city-kingdom on the east coast, with a Roman gymnasium
                             colonnade beside the sea. Largely unsigned and overgrown.</span>
                     </li>
-                    <li>
+                    <li data-region="north">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=St+Hilarion+Castle"
                                     target="_blank" rel="noopener">St Hilarion Castle</a></span><span
@@ -689,7 +780,7 @@
                             Kyrenia castle.</span>
                     </li>
 
-                    <li>
+                    <li data-region="troodos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Agios+Nikolaos+tis+Stegis+Kakopetria"
                                     target="_blank" rel="noopener">The painted churches of Troodos</a></span><span
@@ -701,7 +792,7 @@
                 </ul>
             </section>
 
-            <section id="divide">
+            <section id="divide" class="by-theme">
                 <h2>The divided island</h2>
                 <figure class="section-image">
                     <img src="assets/nicosia-green-line.webp"
@@ -712,7 +803,7 @@
                 <p class="group-note">In 1963 a British general drew a line across Nicosia with a green
                     pencil. It is still there. Don&rsquo;t photograph checkpoints or anyone in uniform.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Ledra+Street+Crossing+Point"
                                     target="_blank" rel="noopener">The Green Line walk</a></span><span
@@ -721,7 +812,7 @@
                             at Ledra Street (passport, minutes), past the Home for Cooperation, a caf&eacute;
                             inside the buffer zone.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Buyuk+Han+Nicosia"
                                     target="_blank" rel="noopener">B&uuml;y&uuml;k Han &amp; Selimiye
@@ -730,7 +821,7 @@
                             Gothic former cathedral converted to a mosque with minarets. Both a short walk from
                             the Ledra crossing.</span>
                     </li>
-                    <li>
+                    <li data-region="north">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Famagusta+old+town"
                                     target="_blank" rel="noopener">Famagusta walled city</a></span><span
@@ -739,7 +830,7 @@
                             cathedral &mdash; coronation church of the Kings of Jerusalem &mdash; a mosque since
                             1571.</span>
                     </li>
-                    <li>
+                    <li data-region="north">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Varosha+Famagusta"
                                     target="_blank" rel="noopener">Varosha</a></span><span
@@ -751,7 +842,7 @@
                 </ul>
             </section>
 
-            <section id="rocks">
+            <section id="rocks" class="by-theme">
                 <h2>Rocks &amp; mines</h2>
                 <figure class="section-image">
                     <img src="assets/red-lake-mitsero.webp"
@@ -761,7 +852,7 @@
                 <p class="group-note">The Troodos is a slab of 92-million-year-old ocean floor, and the word
                     &ldquo;copper&rdquo; comes from this island.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="troodos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Troodos+Geopark+Visitor+Centre"
                                     target="_blank" rel="noopener">Troodos Geopark visitor centre</a></span><span
@@ -770,7 +861,7 @@
                             mine, explaining the Troodos range. Worth seeing before the mountain
                             drives.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Red+Lake+Mitsero"
                                     target="_blank" rel="noopener">Red Lake, Mitsero</a></span><span
@@ -779,7 +870,7 @@
                             with blood-red water, thirty minutes from the capital. Toxic; look,
                             don&rsquo;t touch.</span>
                     </li>
-                    <li>
+                    <li data-region="troodos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Tzelefos+Bridge"
                                     target="_blank" rel="noopener">Tzelefos bridge</a></span><span class="r-tag">Paphos
@@ -790,11 +881,11 @@
                 </ul>
             </section>
 
-            <section id="trails">
+            <section id="trails" class="by-theme">
                 <h2>Trails</h2>
                 <p class="group-note">October through May. Early starts, real shoes, carry water.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Baths+of+Aphrodite+Akamas"
                                     target="_blank" rel="noopener">Adonis &amp; Aphrodite loop</a></span><span
@@ -802,7 +893,7 @@
                         <span class="r-note">A nine-and-a-half-kilometer Akamas walk to a ridge above the Blue
                             Lagoon coast. Do the Adonis side first for sea views on the descent.</span>
                     </li>
-                    <li>
+                    <li data-region="troodos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Teisia+tis+Madaris+trail"
                                     target="_blank" rel="noopener">Teisia tis Madaris</a></span><span
@@ -811,7 +902,7 @@
                             with far-reaching views, often above the clouds on autumn mornings.</span>
                     </li>
 
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Avakas+Gorge"
                                     target="_blank" rel="noopener">Avakas Gorge</a></span><span
@@ -823,11 +914,11 @@
                 </ul>
             </section>
 
-            <section id="wild">
+            <section id="wild" class="by-theme">
                 <h2>The wild</h2>
                 <p class="group-note">Comebacks and near misses. Seasons matter here.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Lara+Beach+Akamas"
                                     target="_blank" rel="noopener">Lara Bay</a></span><span class="r-tag">Akamas</span>
@@ -836,7 +927,7 @@
                             July, hatchlings through September), reached by an unpaved road. No lights after
                             dark in season.</span>
                     </li>
-                    <li>
+                    <li data-region="limassol">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Zapallo+Bay+Episkopi"
                                     target="_blank" rel="noopener">The vulture cliffs at Episkopi</a></span><span
@@ -844,7 +935,7 @@
                         <span class="r-note">A griffon vulture colony above Zapallo Bay, rebuilt with birds
                             brought from Spain. Best mid-morning when the thermals build.</span>
                     </li>
-                    <li>
+                    <li data-region="larnaca">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Larnaca+Salt+Lake"
                                     target="_blank" rel="noopener">The salt lakes</a></span><span class="r-tag">Larnaca
@@ -857,7 +948,7 @@
                 </ul>
             </section>
 
-            <section id="sea">
+            <section id="sea" class="by-theme">
                 <h2>The sea</h2>
                 <figure class="section-image">
                     <img src="assets/musan-diving-underwater-museum.webp"
@@ -867,7 +958,7 @@
                 <p class="group-note">One of the longest dive seasons in the Mediterranean, March to November.
                     The water holds 24 degrees deep into autumn.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="larnaca">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Zenobia+wreck+Larnaca"
                                     target="_blank" rel="noopener">The Zenobia</a></span><span
@@ -875,14 +966,14 @@
                         <span class="r-note">A 172-meter ferry that sank in 1980 with a hundred trucks
                             aboard; a world top-ten wreck dive, minutes offshore.</span>
                     </li>
-                    <li>
+                    <li data-region="east">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=MUSAN+Ayia+Napa"
                                     target="_blank" rel="noopener">MUSAN</a></span><span class="r-tag">Ayia Napa</span>
                         </div>
                         <span class="r-note">An underwater sculpture museum you snorkel or dive through.</span>
                     </li>
-                    <li>
+                    <li data-region="east">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Cape+Greco+sea+caves"
                                     target="_blank" rel="noopener">Cape Greco by kayak</a></span><span
@@ -890,7 +981,7 @@
                         <span class="r-note">A three-hour paddle along the cliffs to the sea caves, with
                             swimming stops. Runs until the end of October.</span>
                     </li>
-                    <li>
+                    <li data-region="east">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Nissi+Beach"
                                     target="_blank" rel="noopener">Nissi &middot; Fig Tree Bay &middot;
@@ -898,7 +989,7 @@
                         <span class="r-note">Three of the island&rsquo;s best-known beaches; Konnos is the
                             quietest of the three.</span>
                     </li>
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Blue+Lagoon+Akamas"
                                     target="_blank" rel="noopener">Blue Lagoon</a></span><span
@@ -909,7 +1000,7 @@
                 </ul>
             </section>
 
-            <section id="food">
+            <section id="food" class="by-theme">
                 <h2>Food</h2>
                 <figure class="section-image">
                     <img src="assets/cyprus-meze-optimised.webp"
@@ -919,7 +1010,7 @@
                 <p class="group-note">It's a shame to leave without trying a proper meze, local fish, fresh halloumi,
                     kleftiko, and loukoumades.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Sofia+And+Andreas+Traditional+House+Letymvou"
                                     target="_blank" rel="noopener">Sofia &amp; Andreas&rsquo; house,
@@ -927,7 +1018,7 @@
                         <span class="r-note">A village family home serving lunch at their table, with halloumi
                             made in a vat in front of you and bread from the stone oven. Book ahead.</span>
                     </li>
-                    <li>
+                    <li data-region="larnaca">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Hercules+Fish+Tavern+Zygi"
                                     target="_blank" rel="noopener">Hercules, Zygi</a></span><span
@@ -935,28 +1026,28 @@
                         <span class="r-note">A fish tavern in the fishing village of Zygi, known for its
                             calamari.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Bemba+restaurant+Nicosia"
                                     target="_blank" rel="noopener">&Mu;&pi;&eacute;&mu;&pi;&alpha;</a></span><span
                                 class="r-tag">Nicosia</span></div>
                         <span class="r-note">Modern Cypriot cooking in Nicosia&rsquo;s old town.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Topika+Meze+Bar+Nicosia"
                                     target="_blank" rel="noopener">Topika</a></span><span class="r-tag">Nicosia</span>
                         </div>
                         <span class="r-note">A meze restaurant in Nicosia&rsquo;s old town.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Picnic+Nicosia"
                                     target="_blank" rel="noopener">Picnic</a></span><span class="r-tag">Nicosia</span>
                         </div>
                         <span class="r-note">A brunch spot in Nicosia&rsquo;s old town.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Rokoko+Kitchen+Bar+Nicosia"
                                     target="_blank" rel="noopener">Rokoko</a></span><span class="r-tag">Nicosia</span>
@@ -964,7 +1055,7 @@
                         <span class="r-note">An Italian-leaning kitchen and bar in Nicosia&rsquo;s old
                             town.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=%CE%B3%CF%81%CE%B1%CE%BD%CE%AC%CE%B6%CE%B9+Nicosia"
                                     target="_blank"
@@ -973,7 +1064,7 @@
                         <span class="r-note">A bar with good food in Nicosia, for the late end of the
                             evening.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=OCHI+Open+Market+Nicosia"
                                     target="_blank" rel="noopener">OXI Market</a></span><span
@@ -981,7 +1072,15 @@
                         <span class="r-note">A farmers&rsquo; market on the Venetian walls, Wednesday and
                             Saturday mornings.</span>
                     </li>
-                    <li>
+                    <li data-region="nicosia">
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Honest+Bread+Nicosia"
+                                    target="_blank" rel="noopener">Honest Bread</a></span><span
+                                class="r-tag">Nicosia</span></div>
+                        <span class="r-note">A small sourdough bakery, worth a stop for bread and
+                            pastries.</span>
+                    </li>
+                    <li data-region="east">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=To+souvlaki+tou+Soukri+Paralimni"
                                     target="_blank" rel="noopener">To souvlaki tou Soukri</a></span><span
@@ -989,14 +1088,22 @@
                         <span class="r-note">A Paralimni grill known for its souvlaki; a second branch in
                             Protaras.</span>
                     </li>
-                    <li>
+                    <li data-region="larnaca">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Adamos+Tavern+Lefkara"
                                     target="_blank" rel="noopener">Adamos, Lefkara</a></span><span class="r-tag">Larnaca
                                 hills</span></div>
                         <span class="r-note">A village tavern in Lefkara, the one locals point you to.</span>
                     </li>
-                    <li>
+                    <li data-region="larnaca">
+                        <div class="r-head"><span class="r-name"><a
+                                    href="https://www.google.com/maps/search/?api=1&amp;query=Lazaris+BakeryBar+Larnaca"
+                                    target="_blank" rel="noopener">Lazaris</a></span><span
+                                class="r-tag">Larnaca</span></div>
+                        <span class="r-note">A bakery-bar in a restored townhouse a few steps from the
+                            Church of Saint Lazarus, good from morning coffee to evening drinks.</span>
+                    </li>
+                    <li data-region="wine">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Katoi+Omodos"
                                     target="_blank" rel="noopener">Katoi, Omodos</a></span><span
@@ -1007,13 +1114,13 @@
                 </ul>
             </section>
 
-            <section id="wine">
+            <section id="wine" class="by-theme">
                 <h2>Wine</h2>
                 <p class="group-note">Commandaria is plausibly the oldest wine still made under its own name;
                     the Knights ran it from Kolossi castle. The villages making it are an hour from the
                     coast.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="wine">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Zambartas+Winery"
                                     target="_blank" rel="noopener">Zambartas</a></span><span
@@ -1021,7 +1128,7 @@
                         <span class="r-note">A leading winery reviving indigenous grapes: Xynisteri,
                             Maratheftiko, Yiannoudi.</span>
                     </li>
-                    <li>
+                    <li data-region="wine">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Vlassides+Winery+Kilani"
                                     target="_blank" rel="noopener">Vlassides, Kilani</a></span><span
@@ -1031,7 +1138,7 @@
                     </li>
 
 
-                    <li>
+                    <li data-region="wine">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Revecca+Winery+Agios+Mamas"
                                     target="_blank" rel="noopener">Revecca, Agios Mamas</a></span><span
@@ -1042,11 +1149,11 @@
                 </ul>
             </section>
 
-            <section id="slow">
+            <section id="slow" class="by-theme">
                 <h2>Slowing down</h2>
                 <p class="group-note">Cyprus does luxury best when it is woven into a village.</p>
                 <ul class="recs">
-                    <li>
+                    <li data-region="troodos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Casale+Panayiotis+Kalopanayiotis"
                                     target="_blank" rel="noopener">Casale Panayiotis</a></span><span
@@ -1054,7 +1161,7 @@
                         <span class="r-note">A century of restored stone houses across a living valley
                             village, with a well-regarded spa. Steep lanes.</span>
                     </li>
-                    <li>
+                    <li data-region="wine">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Apokryfo+Lofou"
                                     target="_blank" rel="noopener">Apokryfo, Lofou</a></span><span
@@ -1062,7 +1169,7 @@
                         <span class="r-note">A boutique hotel in the unspoilt wine village of Lofou, fifteen
                             minutes from the wineries.</span>
                     </li>
-                    <li>
+                    <li data-region="paphos">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Anassa+Hotel"
                                     target="_blank" rel="noopener">Anassa</a></span><span class="r-tag">Akamas</span>
@@ -1071,7 +1178,7 @@
                             Latchi fish quay is five minutes away.</span>
                     </li>
 
-                    <li>
+                    <li data-region="nicosia">
                         <div class="r-head"><span class="r-name"><a
                                     href="https://www.google.com/maps/search/?api=1&amp;query=Hamam+Omerye+Nicosia"
                                     target="_blank" rel="noopener">Hamam Omerye</a></span><span
@@ -1100,6 +1207,143 @@
             var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById('progressBar').style.width = (scrollTop / scrollHeight) * 100 + '%';
         });
+
+        // The region view: the same places as the theme sections, cloned and
+        // regrouped by drive-time proximity (each li carries data-region).
+        // Built before the scrollspy below so its sections and links are
+        // observed too. Order follows a trip from Larnaca: east, then the
+        // middle, then west, then the north.
+        (function () {
+            var REGIONS = [
+                {
+                    id: 'larnaca', title: 'Larnaca & around',
+                    note: 'The church and the bakery are on the same square; Zygi, Khirokitia, and Lefkara are 20 to 30 minutes down the motorway.'
+                },
+                {
+                    id: 'east', title: 'Ayia Napa & Protaras',
+                    note: 'One short strip of coast; nothing here is more than 20 minutes from anything else.'
+                },
+                {
+                    id: 'nicosia', title: 'Nicosia',
+                    note: 'Most of it is in or near the old town, on both sides of the line; Honest Bread is a short drive south, Red Lake half an hour out. Don’t photograph checkpoints or anyone in uniform.'
+                },
+                {
+                    id: 'troodos', title: 'The high Troodos',
+                    note: 'Mountain roads are slow; villages that look adjacent on the map can be 40 minutes apart.'
+                },
+                {
+                    id: 'wine', title: 'The wine villages',
+                    note: 'A tight cluster in the hills above Limassol, 10 to 15 minutes between stops.'
+                },
+                {
+                    id: 'limassol', title: 'Limassol & around',
+                    note: 'Both sit on the Akrotiri peninsula, 20 minutes west of the city.'
+                },
+                {
+                    id: 'paphos', title: 'Paphos & the Akamas',
+                    note: 'The town sights are close together; the Akamas tip is another 40 minutes north.'
+                },
+                {
+                    id: 'north', title: 'The north',
+                    note: 'Famagusta, Varosha, and Salamis sit together; St Hilarion is an hour west along the coast. Bring a passport, and don’t photograph checkpoints or anyone in uniform.'
+                }
+            ];
+
+            var container = document.getElementById('regionSections');
+            if (!container) return;
+
+            var built = [];
+            REGIONS.forEach(function (region) {
+                var items = document.querySelectorAll('section.by-theme .recs > li[data-region="' + region.id + '"]');
+                if (!items.length) return;
+                built.push(region);
+
+                var section = document.createElement('section');
+                section.id = 'region-' + region.id;
+                section.className = 'region-section';
+
+                var heading = document.createElement('h2');
+                heading.textContent = region.title;
+                section.appendChild(heading);
+
+                var note = document.createElement('p');
+                note.className = 'group-note';
+                note.textContent = region.note;
+                section.appendChild(note);
+
+                var list = document.createElement('ul');
+                list.className = 'recs';
+                items.forEach(function (item) {
+                    list.appendChild(item.cloneNode(true));
+                });
+                section.appendChild(list);
+                container.appendChild(section);
+            });
+
+            // A region flavour of the contents, in both navs. Links only to
+            // sections that were actually built, so a mistyped data-region
+            // can never leave a dead contents entry.
+            document.querySelectorAll('ol.toc-theme').forEach(function (themeList) {
+                var regionList = document.createElement('ol');
+                regionList.className = 'toc-region';
+                built.forEach(function (region) {
+                    var li = document.createElement('li');
+                    var a = document.createElement('a');
+                    a.href = '#region-' + region.id;
+                    a.textContent = region.title;
+                    li.appendChild(a);
+                    regionList.appendChild(li);
+                });
+                var mapLi = document.createElement('li');
+                var mapA = document.createElement('a');
+                mapA.href = '#map';
+                mapA.textContent = 'The map';
+                mapLi.appendChild(mapA);
+                regionList.appendChild(mapLi);
+                themeList.parentNode.appendChild(regionList);
+            });
+
+            var buttons = document.querySelectorAll('.view-btn');
+
+            function setView(view) {
+                document.body.classList.toggle('view-region', view === 'region');
+                buttons.forEach(function (btn) {
+                    var active = btn.getAttribute('data-view') === view;
+                    btn.classList.toggle('active', active);
+                    btn.setAttribute('aria-pressed', String(active));
+                });
+                try { localStorage.setItem('cyprus-view', view); } catch (e) { /* private mode */ }
+            }
+
+            buttons.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    setView(btn.getAttribute('data-view'));
+                });
+            });
+
+            try {
+                if (localStorage.getItem('cyprus-view') === 'region') setView('region');
+            } catch (e) { /* private mode */ }
+
+            // Deep links work across views: a #region-* link switches to the
+            // region view, a theme-section link switches back, and either way
+            // the target is scrolled to once it is visible.
+            function honorHash() {
+                if (!location.hash) return;
+                var target;
+                try { target = document.getElementById(location.hash.slice(1)); } catch (e) { return; }
+                if (!target) return;
+                if (target.closest('.region-sections')) setView('region');
+                else if (target.closest('section.by-theme')) setView('theme');
+                else return;
+                target.scrollIntoView();
+            }
+            honorHash();
+            window.addEventListener('hashchange', honorHash);
+
+            // Everything is wired; only now does the control appear.
+            document.querySelector('.view-toggle').hidden = false;
+        })();
 
         // Contents scrollspy (sidebar).
         (function () {
